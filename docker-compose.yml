@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+
+  hf:
+    build: .
+    ports:
+      - "4567:4567"
+    volumes:
+      - .:/usr/src/app
+      - gem_cache:/gems
+    depends_on:
+      - mariadb
+    environment:
+      DB_CONNECTION_STRING: "mysql2://ht_rights:ht_rights@mariadb/ht"
+      USERS_FILE: "config/users"
+
+  mariadb:
+    image: ghcr.io/hathitrust/db-image
+    restart: always
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 1 
+      MYSQL_DATABASE: ht
+      MYSQL_USER: ht_rights
+      MYSQL_PASSWORD: ht_rights
+
+volumes:
+  gem_cache:
