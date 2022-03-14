@@ -38,6 +38,7 @@ RSpec.describe ItemRecord do
     # TODO: test what happens where there is more than one SDR for the collection
     # Can have multiple bib nums from the same source on the same Zeph record
     it "extracts the source_bib_num" do
+      ir.sdr_nums = {"miu"=>".990058493500106381"}
       expect(ir.source_bib_num).to eq(".990058493500106381")
     end
 
@@ -46,7 +47,7 @@ RSpec.describe ItemRecord do
     end
 
     it "extracts the rights_timestamp" do
-      expect(ir.rights_timestamp).to eq("20210912")
+      expect(ir.rights_timestamp).to eq(DateTime.parse("2020-12-04 03:25:36").to_time)
     end
 
     it "extracts the rights_determination_note" do
@@ -76,7 +77,22 @@ RSpec.describe ItemRecord do
   end
 
   it "retrieves the access_profile_code" do
-    expect(ir.access_profile_code).to eq("google")
+    expect(ir.access_profile_code).to eq(2)
+  end
+
+  it "retrieves the access_profile" do
+    expect(ir.access_profile).to eq("google")
+  end
+
+  describe "#rights_date_used" do
+    it "fills non-existent rdus with '9999'" do
+      m = MARC::Record.new_from_hash(
+        JSON.parse(File.open(File.dirname(__FILE__) + '/data/no_rights_date_used_rec.json').read)
+      )
+      item_marc = m.fields('974').first
+      ir = described_class.new(item_marc)
+      expect(ir.rights_date_used).to eq("9999")
+    end
   end
 
   # 902   $attr =~ /^(pdus$|pd$|world|ic-world|cc|und-world)/ and return 'allow';

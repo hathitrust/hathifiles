@@ -2,6 +2,7 @@
 
 require "spec_helper"
 require "us_fed_doc"
+require "bib_record"
 
 RSpec.describe USFedDoc do
 
@@ -14,6 +15,11 @@ RSpec.describe USFedDoc do
   end
 
   describe "#ntis?" do
+    it "detects and NTIS record" do
+      ntis_rec = BibRecord.new(File.open(File.dirname(__FILE__) +
+         '/data/ntis_bib_rec.json').read)
+      expect(ntis_rec.ntis?).to be true
+    end
   end
 
   describe "#armed_forces_communications_association?" do

@@ -28,7 +28,7 @@ module RightsDatabase
       rights = Services.rights_db[:rights_current]
                        .where(namespace: namespace, Sequel.qualify(:rights_current, :id) => id)
                        .first
-      rights.each do |k, v|
+      rights&.each do |k, v|
         case k
         when :reason
           @reason = Services.rights_reasons[v]
