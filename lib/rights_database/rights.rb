@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'services'
+require "services"
 
 module RightsDatabase
   # Rights for an individual HT item
@@ -8,7 +8,7 @@ module RightsDatabase
     attr_accessor :item_id, :attribute, :reason, :source, :time, :note, :access_profile, :user, :namespace, :id
 
     def initialize(item_id:, attribute: nil, reason: nil, source: nil, time: nil, note: nil, access_profile: nil,
-                   user: nil)
+      user: nil)
       @item_id = item_id
       @namespace, @id = @item_id.split(/\./, 2)
       if @attribute.nil?
@@ -26,8 +26,8 @@ module RightsDatabase
 
     def load_from_db
       rights = Services.rights_db[:rights_current]
-                       .where(namespace: namespace, Sequel.qualify(:rights_current, :id) => id)
-                       .first
+        .where(:namespace => namespace, Sequel.qualify(:rights_current, :id) => id)
+        .first
       rights&.each do |k, v|
         case k
         when :reason

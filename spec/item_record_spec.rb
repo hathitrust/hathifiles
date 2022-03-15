@@ -6,17 +6,16 @@ require "item_record"
 RSpec.describe ItemRecord do
   let(:m) do
     MARC::Record.new_from_hash(
-      JSON.parse(File.open(File.dirname(__FILE__) + '/data/bib_rec.json').read)
+      JSON.parse(File.read(File.dirname(__FILE__) + "/data/bib_rec.json"))
     )
   end
-  let(:item_marc) { m.fields('974').first }
+  let(:item_marc) { m.fields("974").first }
 
   let(:ir) { described_class.new(item_marc) }
 
   context "when given MARC 974 at initialize" do
-  
-    it "extracts the htid" do 
-      expect(ir.htid).to eq('mdp.39015077958422')
+    it "extracts the htid" do
+      expect(ir.htid).to eq("mdp.39015077958422")
     end
 
     it "extracts the access" do
@@ -24,7 +23,7 @@ RSpec.describe ItemRecord do
     end
 
     it "retrives the rights code" do
-      expect(ir.rights).to eq('pd')
+      expect(ir.rights).to eq("pd")
     end
 
     it "extracts the description" do
@@ -38,7 +37,7 @@ RSpec.describe ItemRecord do
     # TODO: test what happens where there is more than one SDR for the collection
     # Can have multiple bib nums from the same source on the same Zeph record
     it "extracts the source_bib_num" do
-      ir.sdr_nums = {"miu"=>".990058493500106381"}
+      ir.sdr_nums = {"miu" => ".990058493500106381"}
       expect(ir.source_bib_num).to eq(".990058493500106381")
     end
 
@@ -71,9 +70,8 @@ RSpec.describe ItemRecord do
     end
 
     it "extracts the digitization_agent_code" do
-      expect(ir.digitization_agent_code).to eq('google')
+      expect(ir.digitization_agent_code).to eq("google")
     end
-
   end
 
   it "retrieves the access_profile_code" do
@@ -87,9 +85,9 @@ RSpec.describe ItemRecord do
   describe "#rights_date_used" do
     it "fills non-existent rdus with '9999'" do
       m = MARC::Record.new_from_hash(
-        JSON.parse(File.open(File.dirname(__FILE__) + '/data/no_rights_date_used_rec.json').read)
+        JSON.parse(File.read(File.dirname(__FILE__) + "/data/no_rights_date_used_rec.json"))
       )
-      item_marc = m.fields('974').first
+      item_marc = m.fields("974").first
       ir = described_class.new(item_marc)
       expect(ir.rights_date_used).to eq("9999")
     end
@@ -128,11 +126,9 @@ RSpec.describe ItemRecord do
       expect(ir.access).to eq("allow")
     end
 
-
     it "deny when it is anything else" do
       ir.rights = "pd but no"
       expect(ir.access).to eq("deny")
     end
   end
-
 end

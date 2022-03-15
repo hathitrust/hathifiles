@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'dotenv'
-Dotenv.load('.env')
+require "dotenv"
+Dotenv.load(".env")
 
-require 'delegate'
-require 'mysql2'
-require 'sequel'
-require 'services'
-require 'tempfile'
+require "delegate"
+require "mysql2"
+require "sequel"
+require "services"
+require "tempfile"
 
 module RightsDatabase
   # Backend for connection to MySQL database for production information about
@@ -16,7 +16,7 @@ module RightsDatabase
     attr_reader :rawdb
     attr_accessor :connection_string
 
-    def initialize(connection_string = ENV['DB_CONNECTION_STRING'], **kwargs)
+    def initialize(connection_string = ENV["DB_CONNECTION_STRING"], **kwargs)
       @rawdb = self.class.connection(connection_string, **kwargs)
       super(@rawdb)
     end
@@ -35,8 +35,8 @@ module RightsDatabase
     #   port: DB_PORT
     #   database: DB_DATABASE
     #   adapter: DB_ADAPTER
-    def self.connection(connection_string = ENV['DB_CONNECTION_STRING'],
-                        **kwargs)
+    def self.connection(connection_string = ENV["DB_CONNECTION_STRING"],
+      **kwargs)
 
       if connection_string.nil?
         db_args = gather_db_args(kwargs).merge(
@@ -55,13 +55,13 @@ module RightsDatabase
 
       def gather_db_args(args)
         %i[user password host
-           port database adapter].each do |db_arg|
+          port database adapter].each do |db_arg|
           args[db_arg] ||= ENV["DB_#{db_arg.to_s.upcase}"]
         end
 
-        args[:host] ||= 'localhost'
+        args[:host] ||= "localhost"
         args[:adapter] ||= :mysql2
-        args[:database] ||= 'ht_rights'
+        args[:database] ||= "ht_rights"
         args
       end
     end

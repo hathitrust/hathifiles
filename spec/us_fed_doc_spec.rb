@@ -5,8 +5,7 @@ require "us_fed_doc"
 require "bib_record"
 
 RSpec.describe USFedDoc do
-
-  let(:rec) { BibRecord.new(File.open(File.dirname(__FILE__) + '/data/bib_rec.json').read) }
+  let(:rec) { BibRecord.new(File.read(File.dirname(__FILE__) + "/data/bib_rec.json")) }
 
   describe "#exception?" do
   end
@@ -16,8 +15,8 @@ RSpec.describe USFedDoc do
 
   describe "#ntis?" do
     it "detects and NTIS record" do
-      ntis_rec = BibRecord.new(File.open(File.dirname(__FILE__) +
-         '/data/ntis_bib_rec.json').read)
+      ntis_rec = BibRecord.new(File.read(File.dirname(__FILE__) +
+         "/data/ntis_bib_rec.json"))
       expect(ntis_rec.ntis?).to be true
     end
   end
@@ -37,7 +36,3 @@ RSpec.describe USFedDoc do
   describe "#federal_reserve?" do
   end
 end
-
-
-
-

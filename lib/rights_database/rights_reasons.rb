@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'services'
+require "services"
 
 module RightsDatabase
   # Reason description
@@ -23,11 +23,11 @@ module RightsDatabase
 
     def load_from_db
       Services.rights_db[:reasons]
-              .select(:id,
-                      :name,
-                      :dscr)
-              .as_hash(:id)
-              .transform_values { |h| Reason.new(h) }
+        .select(:id,
+          :name,
+          :dscr)
+        .as_hash(:id)
+        .transform_values { |h| Reason.new(h) }
     end
 
     def [](reason)

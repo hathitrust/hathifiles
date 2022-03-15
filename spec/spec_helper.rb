@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'pry'
-require 'simplecov'
-require 'fixtures/rights'
-require 'fixtures/collections'
-require 'factory_bot'
-require 'services'
+require "pry"
+require "simplecov"
+require "fixtures/rights"
+require "fixtures/collections"
+require "factory_bot"
+require "services"
 SimpleCov.start
 
 RSpec.configure do |config|

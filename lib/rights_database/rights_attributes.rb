@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'services'
+require "services"
 
 module RightsDatabase
   class Attribute
@@ -24,12 +24,12 @@ module RightsDatabase
 
     def load_from_db
       Services.rights_db[:attributes]
-              .select(:id,
-                      :type,
-                      :name,
-                      :dscr)
-              .as_hash(:id)
-              .transform_values { |h| Attribute.new(h) }
+        .select(:id,
+          :type,
+          :name,
+          :dscr)
+        .as_hash(:id)
+        .transform_values { |h| Attribute.new(h) }
     end
 
     def [](attr)

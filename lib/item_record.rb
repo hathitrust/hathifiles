@@ -4,10 +4,10 @@ require "marc"
 require "services"
 
 class ItemRecord
+  attr_accessor :marc, :sdr_nums
+  attr_writer :htid, :access, :description, :source, :source_bib_num, :rights, :rights_reason_code, :rights_timestamp, :rights_determination_note, :rights_date_used, :collection_code, :content_provider_code, :access_profile_code
 
-  attr_accessor :marc, :htid, :description, :source, :rights, :rights_reason_code, :rights_timestamp, :rights_determination_note, :rights_date_used, :collection_code, :content_provider_code, :access, :source_bib_num, :responsible_entity_code, :access_profile_code, :sdr_nums
-
-  def initialize(marc=nil, sdr_nums=nil)
+  def initialize(marc = nil, sdr_nums = nil)
     unless marc.nil?
       @marc = marc
     end
@@ -16,25 +16,25 @@ class ItemRecord
 
   # Volume identifier
   def htid
-    @htid ||= marc['u']
+    @htid ||= marc["u"]
   end
 
   def access
     return @access unless @access.nil?
-    if rights =~ /^(pdus$|pd$|world|ic-world|cc|und-world)/
-      @access = "allow"
+    @access = if /^(pdus$|pd$|world|ic-world|cc|und-world)/.match?(rights)
+      "allow"
     else
-      @access = "deny"
+      "deny"
     end
   end
 
   # Enumeration / chronology from the 974z
   def description
-    @description ||= (marc['z'] || '')
+    @description ||= (marc["z"] || "")
   end
 
   # In theory, it is the "Code identifying the source of the bibliographic record..."
-  # In practice it's just the collection code for this item. I think. 
+  # In practice it's just the collection code for this item. I think.
   def source
     collection_code
   end
@@ -49,42 +49,44 @@ class ItemRecord
   end
 
   def rights
-    @rights ||= marc['r']
+    @rights ||= marc["r"]
   end
 
   def rights_reason_code
-    @rights_reason_code ||= marc['q']
+    @rights_reason_code ||= marc["q"]
   end
 
   def rights_timestamp
-    #@rights_timestamp ||= marc['d']
+    # @rights_timestamp ||= marc['d']
     @rights_timestamp = rights_from_db.time
   end
 
   def rights_determination_note
-    @rights_determination_note ||= marc['t']
+    @rights_determination_note ||= marc["t"]
   end
 
   # From the rights database
   def rights_date_used
     # Have to use bib rights to match current data but that's not worth it
-    @rights_date_used ||= (marc['y'] || "9999")
+    @rights_date_used ||= (marc["y"] || "9999")
   end
 
   def collection_code
-    @collection_code ||= marc['c']
+    @collection_code ||= marc["c"]
   end
 
   def responsible_entity_code
+    return "utk" if collection_code == "TU"
     @responsible_entity_code ||= Services.ht_collections[collection_code].responsible_entity
-  end 
+  end
 
   def digitization_agent_code
-    @digitization_agent_code ||= marc['s']
+    @digitization_agent_code ||= marc["s"]
   end
 
   # From the rights database
   def content_provider_code
+    return "utk" if collection_code == "TU"
     @content_provider_code ||= Services.ht_collections[collection_code].content_provider_cluster
   end
 
@@ -96,32 +98,32 @@ class ItemRecord
   def access_profile
     # TODO: use the actual mapping table
     mapping = {1 => "open",
-              2 => "google",
-              3 => "page",
-              4 => "page+lowres"}
+               2 => "google",
+               3 => "page",
+               4 => "page+lowres"}
     mapping[access_profile_code] || access_profile_code
-  end    
+  end
 
   def to_h
-    { htid: htid,
-      access: access,
-      rights: rights,
-      description: description,
-      source: source,
-      source_bib_num: source_bib_num,
-      rights_reason_code: rights_reason_code,
-      rights_timestamp: rights_timestamp,
-      rights_date_used: rights_date_used,
-      collection_code: collection_code,
-      content_provider_code: content_provider_code,
-      responsible_entity_code: responsible_entity_code,
-      digitization_agent_code: digitization_agent_code,
-      access_profile_code: access_profile_code,
-      access_profile: access_profile
-    }
-  end    
+    {htid: htid,
+     access: access,
+     rights: rights,
+     description: description,
+     source: source,
+     source_bib_num: source_bib_num,
+     rights_reason_code: rights_reason_code,
+     rights_timestamp: rights_timestamp,
+     rights_date_used: rights_date_used,
+     collection_code: collection_code,
+     content_provider_code: content_provider_code,
+     responsible_entity_code: responsible_entity_code,
+     digitization_agent_code: digitization_agent_code,
+     access_profile_code: access_profile_code,
+     access_profile: access_profile}
+  end
 
   private
+
   def rights_from_db
     @rights_from_db ||= Services.rights.new(item_id: htid)
   end

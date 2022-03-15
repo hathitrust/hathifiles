@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require 'bib_record'
+require "spec_helper"
+require "bib_record"
 
 RSpec.describe BibRecord do
-  let(:m) { File.open(File.dirname(__FILE__) + '/data/bib_rec.json').read }
+  let(:m) { File.read(File.dirname(__FILE__) + "/data/bib_rec.json") }
   let(:br) { described_class.new(m) }
 
   describe "#initialize" do
@@ -21,7 +21,7 @@ RSpec.describe BibRecord do
 
   describe "#oclc_num" do
     it "extracts the OCLC numbers" do
-      expect(br.oclc_num).to eq(["5971627","63970006"])
+      expect(br.oclc_num).to eq(["5971627", "63970006"])
     end
   end
 
@@ -33,7 +33,7 @@ RSpec.describe BibRecord do
 
   describe "#issn" do
     it "extracts the ISSN from the 022a" do
-      expect(br.issn).to eq(["1474-0699","1356-1898","0041-977X"])
+      expect(br.issn).to eq(["1474-0699", "1356-1898", "0041-977X"])
     end
   end
 
@@ -60,7 +60,6 @@ RSpec.describe BibRecord do
     it "detects presence of the u and f in the 008" do
       expect(br.u_and_f?).to be true
     end
-
   end
 
   describe "#pub_place" do
@@ -73,7 +72,6 @@ RSpec.describe BibRecord do
     it "extracts the author from the 100abcd, 110abcd, 111acd" do
       expect(br.author).to eq(["United States. Congress. Senate. Committee on Foreign Relations"])
     end
-
   end
 
   describe "#lang" do
@@ -90,8 +88,8 @@ RSpec.describe BibRecord do
 
   describe "#sdr_nums" do
     it "assembles a mapping of collection codes to bib numbers" do
-      expect(br.sdr_nums).to eq({"miu"=>".990058493500106381",
-                                 "pur"=>"1295679"})
+      expect(br.sdr_nums).to eq({"miu" => ".990058493500106381",
+                                 "pur" => "1295679"})
     end
   end
 
@@ -99,21 +97,20 @@ RSpec.describe BibRecord do
     it "generates a list of ItemRecords from the 974s" do
       item_records = br.item_records.to_a
       expect(item_records.count).to eq(2)
-    end 
+    end
   end
 
   describe "#us_gov_doc_flag" do
     it "identifies smithsonian materials as non-us gov doc" do
-      smith = File.open(File.dirname(__FILE__) + '/data/smithsonian_bib_rec.json').read
+      smith = File.read(File.dirname(__FILE__) + "/data/smithsonian_bib_rec.json")
       br = described_class.new(smith)
       expect(br.us_gov_doc_flag).to eq(0)
     end
 
     it "uses the list of fed doc exceptions" do
-      except = File.open(File.dirname(__FILE__) + '/data/us_gov_doc_exception_rec.json').read
+      except = File.read(File.dirname(__FILE__) + "/data/us_gov_doc_exception_rec.json")
       br = described_class.new(except)
       expect(br.us_gov_doc_flag).to eq(0)
     end
-    
   end
 end
