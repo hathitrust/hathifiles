@@ -1,0 +1,22 @@
+name: Run CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up tests
+        run: ./bin/setup_test.sh
+
+      - name: Run standardrb
+        run: docker-compose run --rm hf bundle exec standardrb
+
+      - name: Run tests
+        run: docker-compose run --rm hf bin/wait-for mariadb:3306 -- bundle exec rspec
