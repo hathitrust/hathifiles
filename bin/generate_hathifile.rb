@@ -13,7 +13,7 @@ def run(infile, outfile)
             rec[:ht_bib_key],
             rec[:description],
             (rec[:source] || ''),
-            (rec[:source_bib_num] || ''),
+            (rec[:source_bib_num].join(',') || ''),
             rec[:oclc_num].join(','),
             rec[:isbn].join(','),
             rec[:issn].join(','),

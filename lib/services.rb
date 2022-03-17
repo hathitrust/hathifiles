@@ -9,6 +9,7 @@ require "rights_database/rights"
 require "rights_database/rights_attributes"
 require "rights_database/rights_reasons"
 require "ht_collections"
+require "sdr_num_prefixes"
 
 Services = Canister.new
 
@@ -18,3 +19,5 @@ Services.register(:rights_attributes) { RightsDatabase::RightsAttributes.new }
 Services.register(:rights_reasons) { RightsDatabase::RightsReasons.new }
 
 Services.register(:ht_collections) { HTCollections.new }
+
+Services.register(:sdrnum_prefix_map) { SdrNumPrefixes.new }

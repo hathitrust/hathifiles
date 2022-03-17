@@ -2,10 +2,10 @@
 
 module USFedDoc
   require "filter"
-  require "filter/blacklist"
+  require "filter/rejected_list"
 
   def exception?
-    oclc_num&.any? { |o| Blacklist.oclcs.include? o.to_i }
+    oclc_num&.any? { |o| RejectedList.oclcs.include? o.to_i }
   end
 
   def nist_nsrds?

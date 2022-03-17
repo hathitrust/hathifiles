@@ -13,7 +13,7 @@ gem "sequel"
 gem "mysql2"
 gem "marc"
 gem "traject"
-gem "filter", git: "https://github.com/hathitrust/feddocs_filter.git"
+gem "filter", git: "https://github.com/hathitrust/feddocs_filter.git", branch: "main"
 
 group :development, :test do
   gem "pry"
