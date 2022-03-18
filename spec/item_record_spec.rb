@@ -46,7 +46,8 @@ RSpec.describe ItemRecord do
     end
 
     it "extracts the rights_timestamp" do
-      expect(ir.rights_timestamp).to eq(DateTime.parse("2020-12-04 03:25:36").to_time)
+      ir.htid = "test.pd_google"
+      expect(ir.rights_timestamp).to eq(DateTime.parse("2009-01-01 05:00:00").to_time)
     end
 
     it "extracts the rights_determination_note" do
@@ -75,10 +76,12 @@ RSpec.describe ItemRecord do
   end
 
   it "retrieves the access_profile_code" do
+    ir.htid = "test.pd_google"
     expect(ir.access_profile_code).to eq(2)
   end
 
   it "retrieves the access_profile" do
+    ir.htid = "test.pd_google"
     expect(ir.access_profile).to eq("google")
   end
 
