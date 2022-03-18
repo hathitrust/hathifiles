@@ -2,8 +2,6 @@
 
 require "pry"
 require "simplecov"
-require "fixtures/rights"
-require "fixtures/collections"
 require "factory_bot"
 require "services"
 SimpleCov.start
@@ -20,15 +18,4 @@ RSpec.configure do |config|
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
   config.include FactoryBot::Syntax::Methods
-
-  config.before(:suite) do
-    FactoryBot.find_definitions
-    mock_rights
-  end
-
-  config.before(:all) do
-    # Ensure we don't try to use DB for tests by default and that we have
-    # mock HT member data to use in tests
-    Services.register(:ht_collections) { mock_collections }
-  end
 end

@@ -4,3 +4,4 @@
 spec/data/hathi_full_20220301.txt
 spec/data/zephir_full_20220228_vufind.json
 *.tmp
+coverage/

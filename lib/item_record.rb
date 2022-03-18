@@ -34,9 +34,8 @@ class ItemRecord
   end
 
   # In theory, it is the "Code identifying the source of the bibliographic record..."
-  # In practice it's just the collection code for this item. I think.
   def source
-    collection_code
+    @source ||= (marc["b"] || "")
   end
 
   # In theory, it is "the Local bibliographic record number used in the catalog
@@ -76,7 +75,6 @@ class ItemRecord
   end
 
   def responsible_entity_code
-    return "utk" if collection_code == "TU"
     @responsible_entity_code ||= Services.ht_collections[collection_code].responsible_entity
   end
 
@@ -86,7 +84,6 @@ class ItemRecord
 
   # From the rights database
   def content_provider_code
-    return "utk" if collection_code == "TU"
     @content_provider_code ||= Services.ht_collections[collection_code].content_provider_cluster
   end
 

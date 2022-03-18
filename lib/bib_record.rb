@@ -150,15 +150,48 @@ class BibRecord
 
   def sdr_nums
     return @sdr_nums unless @sdr_nums.nil?
-    @sdr_nums = {}
+    @sdr_nums = Hash.new { |h, coll| h[coll] = [] }
     Traject::MarcExtractor.cached("035a").extract(marc).each do |sdr|
-      next unless /^(sdr-|ia-)/.match?(sdr)
-      sdr.gsub!(/^(sdr-|ia-)/, "")
-      prefix = sdr[0..2]
-      @sdr_nums[prefix] = sdr[3..]
+      next unless /^sdr-/.match?(sdr)
+      # remove leading sdr-
+      sdr.gsub!(/^sdr-/, "")
+      # remove leading ia-
+      sdr.gsub!(/^ia-/, "")
+      Services.sdrnum_prefix_map.each do |collection_code, prefix|
+        sdr_match = /^#{prefix}([.a-zA-Z0-9-]+)/.match(sdr)
+        next if sdr_match.nil?
+        @sdr_nums[collection_code] << sdr_match[1].gsub(/^-loc/, "")
+      end
     end
     @sdr_nums
   end
+
+  #   F035:foreach my $field ($bib->field('035')) {
+  #     ($sub_a) = $field->as_string('a') or next F035;
+  #     ($sdr_num_with_prefix) = $sub_a =~ /^sdr-(.*)/ and do {
+  #       $sdr_num_with_prefix =~ /^ia-/ and do {
+  #         $sdr_num_with_prefix = substr($sdr_num_with_prefix, 3);
+  #       };
+  #       #print "sdr_num_with_prefix: $sdr_num_with_prefix\n";
+  #       my $collection_match = 0;
+  #       foreach my $collection (sort keys %$sdrnum_prefix_map) {
+  #         my $prefix = $sdrnum_prefix_map->{$collection};
+  #         #print "pattern: /^$prefix([.a-zA-Z0-9-]+)/\n";
+  #         $sdr_num_with_prefix =~/^$prefix([.a-zA-Z0-9-]+)/ and do {
+  #           $num = $1;
+  #           $num =~ /^-loc/ and do {
+  #             my $num_save = $num;
+  #             $num = substr($num, 4);
+  #           };
+  #           #print "match, num is $num\n";
+  #           $collection_match++;
+  #           if ( exists($sdr_num_hash->{$collection}) ) {
+  #             $sdr_num_hash->{$collection} .= ',' . $num;
+  #           } else {
+  #             $sdr_num_hash->{$collection} = $num;
+  #           }
+  #         };
+  #       }
 end
 
 # htid
