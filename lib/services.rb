@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "dotenv"
-Dotenv.load(".env")
 require "canister"
 require "sequel"
 require "rights_database/rights_db"
