@@ -9,9 +9,9 @@ def run(infile, outfile)
   if infile =~ /\.gz$/
     fin = Zlib::GzipReader.open(infile)
   else
-    fin = open(infile)
+    fin = File.open(infile)
   end
-  File.open(infile).each do |line|
+  fin.each do |line|
     BibRecord.new(line).hathifile_records.each do |rec|
       outrec = [rec[:htid],
             rec[:access],
