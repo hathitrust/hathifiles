@@ -5,6 +5,12 @@ require "bib_record"
 
 def run(infile, outfile)
   fout = File.open(outfile, "w")
+  
+  if infile =~ /\.gz$/
+    fin = Zlib::GzipReader.open(infile)
+  else
+    fin = open(infile)
+  end
   File.open(infile).each do |line|
     BibRecord.new(line).hathifile_records.each do |rec|
       outrec = [rec[:htid],
