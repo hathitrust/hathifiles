@@ -5,9 +5,13 @@ require "bib_record"
 require "date"
 require "pry"
 
-def run(infile, outfile)
-  fout = File.open(outfile, "w")
+def run(intype, outdir)
+  # todo: config-r-ate this
+  #zephir_dir = "/htapps/archive/catalog/zephir_"
+  zephir_dir = "/usr/src/app/"
+  infile = Dir.glob("#{zephir_dir}zephir_#{intype}*").sort.last
   
+  binding.pry  
   if infile =~ /\.gz$/
     fin = Zlib::GzipReader.open(infile)
   else
@@ -15,12 +19,16 @@ def run(infile, outfile)
   end
 
   # we only want to write some of the items in the zephr records
+  indate = infile.split("_")[2].split("\.").first
   if infile =~ /upd/
     #cutoff = Date.today.prev_day.strftime("%Y%m%d").to_i 
-    cutoff = infile.split("_")[2].split("\.").first.to_i - 1
+    cutoff = indate.to_i - 1
   else
     cutoff = 0
   end
+ 
+  outfile =  outdir + "/hathi_upd_#{indate}.txt"
+  fout = File.open(outfile, "w")
 
   puts "cutoff: #{cutoff}"
   
