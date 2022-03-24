@@ -53,6 +53,12 @@ RSpec.describe BibRecord do
     it "extracts the imprint from the 260bc" do
       expect(br.imprint).to eq(["U.S. Govt. Print. Off., 1976."])
     end
+
+    it "extracts the imprint from the 264" do
+      imp_rec = File.read(File.dirname(__FILE__) + "/data/imprint_rec.json")
+      br = described_class.new(imp_rec)
+      expect(br.imprint).to eq(["L'Officiel de la couture et de la mode de Paris."])
+    end
   end
 
   describe "#u_and_f?" do

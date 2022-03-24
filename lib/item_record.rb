@@ -5,7 +5,7 @@ require "services"
 
 class ItemRecord
   attr_accessor :marc, :sdr_nums
-  attr_writer :htid, :access, :description, :source, :source_bib_num, :rights, :rights_reason_code, :rights_timestamp, :rights_determination_note, :rights_date_used, :collection_code, :content_provider_code, :access_profile_code
+  attr_writer :htid, :access, :description, :source, :source_bib_num, :rights, :rights_reason_code, :update_date, :rights_timestamp, :rights_determination_note, :rights_date_used, :collection_code, :content_provider_code, :access_profile_code
 
   def initialize(marc = nil, sdr_nums = nil)
     unless marc.nil?
@@ -55,9 +55,12 @@ class ItemRecord
     @rights_reason_code ||= marc["q"]
   end
 
+  def update_date
+    @update_date ||= marc["d"]
+  end
+
   def rights_timestamp
-    # @rights_timestamp ||= marc['d']
-    @rights_timestamp = rights_from_db.time
+    @rights_timestamp ||= rights_from_db.time
   end
 
   def rights_determination_note
@@ -116,7 +119,8 @@ class ItemRecord
      responsible_entity_code: responsible_entity_code,
      digitization_agent_code: digitization_agent_code,
      access_profile_code: access_profile_code,
-     access_profile: access_profile}
+     access_profile: access_profile,
+     update_date: update_date}
   end
 
   private

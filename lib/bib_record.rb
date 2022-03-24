@@ -34,11 +34,11 @@ class BibRecord
   end
 
   def isbn
-    @isbn ||= Traject::MarcExtractor.cached("020a").extract(marc).map { |isbn| isbn.strip }
+    @isbn ||= Traject::MarcExtractor.cached("020a").extract(marc).map { |isbn| isbn.strip }&.uniq
   end
 
   def issn
-    @issn ||= Traject::MarcExtractor.cached("022a").extract(marc).map { |issn| issn.strip }
+    @issn ||= Traject::MarcExtractor.cached("022a").extract(marc).map { |issn| issn.strip }&.uniq
   end
 
   def issns
@@ -46,7 +46,7 @@ class BibRecord
   end
 
   def lccn
-    @lccn ||= Traject::MarcExtractor.cached("010a").extract(marc).map { |lccn| lccn.strip }
+    @lccn ||= Traject::MarcExtractor.cached("010a").extract(marc).map { |lccn| lccn.strip }&.uniq
   end
 
   def title
@@ -57,7 +57,7 @@ class BibRecord
     return @imprint unless @imprint.nil?
     @imprint = Traject::MarcExtractor.cached("260bc").extract(marc).map { |imp| imp.strip }
     if @imprint.none?
-      @imprint = Traject::MarcExtractor.cached("264|1*|bc").extract(marc).map { |imp| imp.strip }
+      @imprint = Traject::MarcExtractor.cached("264|*1|bc").extract(marc).map { |imp| imp.strip }
     end
     @imprint
   end
