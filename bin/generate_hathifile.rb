@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "bib_record"
+require "pry"
 
 def run(infile, outfile)
   fout = File.open(outfile, "w")

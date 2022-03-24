@@ -13,7 +13,6 @@ services:
       - mariadb
     environment:
       DB_CONNECTION_STRING: "mysql2://ht_rights:ht_rights@mariadb/ht"
-      USERS_FILE: "config/users"
 
   mariadb:
     image: ghcr.io/hathitrust/db-image

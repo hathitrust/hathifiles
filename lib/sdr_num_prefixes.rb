@@ -67,7 +67,7 @@ class SdrNumPrefixes
   private
 
   def load_additional_mappings_from_collections_table
-    Services.ht_collections.collections.each do |collection_code, coll|
+    Services.collections.each do |collection_code, coll|
       unless @prefix_map.has_key? collection_code.downcase
         @prefix_map[collection_code.downcase] = collection_code.downcase
       end
