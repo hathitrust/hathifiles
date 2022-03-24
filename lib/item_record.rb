@@ -75,7 +75,7 @@ class ItemRecord
   end
 
   def responsible_entity_code
-    @responsible_entity_code ||= Services.ht_collections[collection_code].responsible_entity
+    @responsible_entity_code ||= Services.collections[collection_code].responsible_entity
   end
 
   def digitization_agent_code
@@ -84,7 +84,7 @@ class ItemRecord
 
   # From the rights database
   def content_provider_code
-    @content_provider_code ||= Services.ht_collections[collection_code].content_provider_cluster
+    @content_provider_code ||= Services.collections[collection_code].content_provider_cluster
   end
 
   # From the rights database
