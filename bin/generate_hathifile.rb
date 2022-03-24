@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require "bib_record"
+require "date"
 require "pry"
 
 def run(infile, outfile)
@@ -12,8 +13,20 @@ def run(infile, outfile)
   else
     fin = File.open(infile)
   end
+
+  # we only want to write some of the items in the zephr records
+  if infile =~ /upd/
+    #cutoff = Date.today.prev_day.strftime("%Y%m%d").to_i 
+    cutoff = infile.split("_")[2].split("\.").first.to_i - 1
+  else
+    cutoff = 0
+  end
+
+  puts "cutoff: #{cutoff}"
+  
   fin.each do |line|
     BibRecord.new(line).hathifile_records.each do |rec|
+      next unless rec[:update_date].to_i > cutoff.to_i
       outrec = [rec[:htid],
             rec[:access],
             rec[:rights],
@@ -28,7 +41,7 @@ def run(infile, outfile)
             rec[:title].join(','),
             rec[:imprint].join(', '),
             (rec[:rights_reason_code] || ''),
-            (rec[:rights_timestamp] || ''),
+            (rec[:rights_timestamp]&.strftime("%Y-%m-%d %H:%M:%S") || ''),
             rec[:us_gov_doc_flag],
             rec[:rights_date_used],
             rec[:pub_place],

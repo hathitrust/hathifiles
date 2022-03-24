@@ -50,6 +50,10 @@ RSpec.describe ItemRecord do
       expect(ir.rights_timestamp).to eq(DateTime.parse("2009-01-01 05:00:00").to_time)
     end
 
+    it "extracts the update date from 974d" do
+      expect(ir.update_date).to eq("20210912")
+    end
+
     it "extracts the rights_determination_note" do
       expect(ir.rights_determination_note).to eq("US fed doc")
     end
