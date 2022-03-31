@@ -6,9 +6,8 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 gem "canister"
 gem "dotenv"
+gem "ettin"
 gem "httpclient"
-# gem 'puma'
-# gem 'sinatra'
 gem "sequel"
 gem "mysql2"
 gem "marc"
