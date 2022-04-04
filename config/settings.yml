@@ -1,0 +1,2 @@
+database:
+  url: <%= ENV["MYSQL_CONNECTION_STRING"] %>
