@@ -67,7 +67,6 @@ class ItemRecord
     @rights_determination_note ||= marc["t"]
   end
 
-  # From the rights database
   def rights_date_used
     # Have to use bib rights to match current data but that's not worth it
     @rights_date_used ||= (marc["y"] || "9999")
@@ -96,12 +95,7 @@ class ItemRecord
   end
 
   def access_profile
-    # TODO: use the actual mapping table
-    mapping = {1 => "open",
-               2 => "google",
-               3 => "page",
-               4 => "page+lowres"}
-    mapping[access_profile_code] || access_profile_code
+    Services.access_profiles[access_profile_code].name || access_profile_code
   end
 
   def to_h
