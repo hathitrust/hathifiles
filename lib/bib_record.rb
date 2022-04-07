@@ -41,10 +41,6 @@ class BibRecord
     @issn ||= Traject::MarcExtractor.cached("022a").extract(marc).map { |issn| issn.strip }&.uniq
   end
 
-  def issns
-    @issns ||= @issns.split(",")
-  end
-
   def lccn
     @lccn ||= Traject::MarcExtractor.cached("010a").extract(marc).map { |lccn| lccn.strip }&.uniq
   end
@@ -165,69 +161,4 @@ class BibRecord
     end
     @sdr_nums
   end
-
-  #   F035:foreach my $field ($bib->field('035')) {
-  #     ($sub_a) = $field->as_string('a') or next F035;
-  #     ($sdr_num_with_prefix) = $sub_a =~ /^sdr-(.*)/ and do {
-  #       $sdr_num_with_prefix =~ /^ia-/ and do {
-  #         $sdr_num_with_prefix = substr($sdr_num_with_prefix, 3);
-  #       };
-  #       #print "sdr_num_with_prefix: $sdr_num_with_prefix\n";
-  #       my $collection_match = 0;
-  #       foreach my $collection (sort keys %$sdrnum_prefix_map) {
-  #         my $prefix = $sdrnum_prefix_map->{$collection};
-  #         #print "pattern: /^$prefix([.a-zA-Z0-9-]+)/\n";
-  #         $sdr_num_with_prefix =~/^$prefix([.a-zA-Z0-9-]+)/ and do {
-  #           $num = $1;
-  #           $num =~ /^-loc/ and do {
-  #             my $num_save = $num;
-  #             $num = substr($num, 4);
-  #           };
-  #           #print "match, num is $num\n";
-  #           $collection_match++;
-  #           if ( exists($sdr_num_hash->{$collection}) ) {
-  #             $sdr_num_hash->{$collection} .= ',' . $num;
-  #           } else {
-  #             $sdr_num_hash->{$collection} = $num;
-  #           }
-  #         };
-  #       }
 end
-
-# htid
-# access
-# rights
-#
-# b ht_bib_key
-#
-# description
-#
-# source
-#
-# source_bib_num
-#
-# b oclc_num
-# b isbn
-# b issn
-# b lccn
-# b title
-# b imprint
-#
-# rights_reason_code
-# rights_timestamp
-#
-# us_gov_doc_flag
-#
-# rights_date_used
-#
-# b pub_place
-# b lang
-# b bib_fmt
-#
-# collection_code
-# content_provider_code
-# responsible_entity_code
-# digitization_agent_code
-# access_profile_code
-#
-# b author
