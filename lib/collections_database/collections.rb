@@ -26,7 +26,7 @@ module CollectionsDatabase
   #  htc = Collections.new()
   #  be = htc["MIU"].billing_entity
   #
-  # This reeturns a hash keyed by member id that contains the collection code,
+  # This reeturns a hash keyed by collection code that contains the collection code,
   # content provider cluster, responsible entity, orginal_from_inst_id, and billing entity.
   class Collections
     attr_reader :collections
