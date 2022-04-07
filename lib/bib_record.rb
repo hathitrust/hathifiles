@@ -66,6 +66,8 @@ class BibRecord
     @pub_place ||= PlaceOfPublication.new(marc)
   end
 
+  # TODO: This is a reimplementation of
+  # https://github.com/mlibrary/traject_umich_format/blob/7d355a5be133dc86f8795954fdd2e01355758309/lib/traject/umich_format/bib_format.rb#L18
   def bib_fmt
     return @bib_fmt unless @bib_fmt.nil?
     rec_type = marc.leader[6]
