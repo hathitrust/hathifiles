@@ -4,7 +4,18 @@ module USFedDoc
   require "filter"
   require "filter/rejected_list"
 
-  def exception?
+  def exception_to_rule?
+    excluded_oclc_number? ||
+      nist_nsrds? ||
+      ntis? ||
+      armed_forces_communications_association? ||
+      national_research_council? ||
+      smithsonian? ||
+      national_gallery_of_art? ||
+      federal_reserve?
+  end
+
+  def excluded_oclc_number?
     oclc_num&.any? { |o| RejectedList.oclcs.include? o.to_i }
   end
 
