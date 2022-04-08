@@ -24,7 +24,7 @@ def run(intype)
     0
   end
 
-  outfile = outdir + "/hathi_upd_#{indate}.txt"
+  outfile = Settings.hathifiles_dir + "hathi_upd_#{indate}.txt"
   fout = File.open(outfile, "w")
 
   fin.each do |line|
