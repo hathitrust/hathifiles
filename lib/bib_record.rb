@@ -109,9 +109,7 @@ class BibRecord
     return @us_gov_doc_flag unless @us_gov_doc_flag.nil?
     @us_gov_doc_flag = 0
     @us_gov_doc_flag = 1 if marc["008"].value[28] == "f" && pub_place.to_s[2] == "u" &&
-      !exception? && !nist_nsrds? && !ntis? &&
-      !armed_forces_communications_association? && !national_research_council? &&
-      !smithsonian? && !national_gallery_of_art? && !federal_reserve?
+      !exception_to_rule?
     @us_gov_doc_flag
   end
 
