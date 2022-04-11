@@ -6,7 +6,7 @@ require_relative "../../jobs/update_hathifile_listing"
 RSpec.describe HathifileListing do
   shared_context :uses_temp_dirs do
     around do |example|
-      Dir.mktmpdir(Settings.hathifiles_archive_path) do |dir|
+      Dir.mktmpdir(Settings.hathifiles_dir) do |dir|
         @tmp_hathifiles_dir = dir
         # generate update files
         thisday = Date.today
