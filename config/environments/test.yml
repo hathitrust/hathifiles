@@ -1,5 +1,4 @@
 # the tests that need these use /tmp/.....
-hathifiles_archive_path: /usr/src/app/tmp_hathifiles_archive/
 hathifiles_web_path: /usr/src/app/tmp_web_hathifiles/
 zephir_dir: /usr/src/app/
-hathifiles_dir: /usr/src/app/
+hathifiles_dir: /usr/src/app/tmp_hathifiles_archive/

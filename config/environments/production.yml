@@ -5,7 +5,6 @@ database:
     database: <%= ENV['MYSQL_DATABASE'] %>
     user: <%= ENV['MYSQL_USER'] %>
     password: <%= ENV['MYSQL_PASSWORD'] %>
-hathifiles_archive_path: <%= ENV["HATHIFILES_ARCHIVE_PATH"] %>
 hathifiles_web_path: <%= ENV['HATHIFILES_WEB_PATH'] %>
 zephir_dir: <%= ENV['ZEPHIR_DIR'] %>
 hathifiles_dir: <%= ENV['HATHIFILES_DIR'] %>
