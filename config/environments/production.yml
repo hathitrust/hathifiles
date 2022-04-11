@@ -1,10 +1,10 @@
 database:
   opts:
     adapter: 'mysql2'
-    host: <%= ENV['MYSQL_HOST'] %>
-    database: <%= ENV['MYSQL_DATABASE'] %>
-    user: <%= ENV['MYSQL_USER'] %>
-    password: <%= ENV['MYSQL_PASSWORD'] %>
+    host: <%= ENV['DB_HOST'] %>
+    database: <%= ENV['DB_DATABASE'] %>
+    user: <%= ENV['DB_USER'] %>
+    password: <%= ENV['DB_PASSWORD'] %>
 hathifiles_web_path: <%= ENV['HATHIFILES_WEB_PATH'] %>
 zephir_dir: <%= ENV['ZEPHIR_DIR'] %>
 hathifiles_dir: <%= ENV['HATHIFILES_DIR'] %>
