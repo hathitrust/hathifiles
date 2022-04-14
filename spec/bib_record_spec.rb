@@ -102,6 +102,7 @@ RSpec.describe BibRecord do
                                 "umlaw" => [".990058493500106381"],
                                 "umdb" => [".990058493500106381"],
                                 "umdcmp" => [".990058493500106381"],
+                                "uuhhs" => [".990058493500106381"],
                                  "pur" => ["1295679"],
                                  # this is wrong, but hopefully doesn't matter
                                  "pu" => ["r1295679"]})

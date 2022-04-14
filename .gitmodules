@@ -1,0 +1,3 @@
+[submodule "config/hathitrust_contrib_configs"]
+	path = config/hathitrust_contrib_configs
+	url = git@github.com:cdlib/hathitrust-contrib-configs.git
