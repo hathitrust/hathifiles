@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-        submodules: false
+        submodules: recursive
 
     - name: Check that the tag exists in repo
       id: tag_check
@@ -52,6 +52,7 @@ jobs:
       uses: actions/checkout@v2
       with:
         ref: ${{ github.event.inputs.tag }}
+        submodules: recursive
 
     - name: Build image and push to GHCR
       if: ${{ steps.image_check.outputs.image_exists != 'true' }}

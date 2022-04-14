@@ -6,52 +6,17 @@ class SdrNumPrefixes
   attr_reader :prefix_map
 
   def initialize
-    # collection code => prefix
-    @prefix_map = {
-      "deu" => "udel",
-      # 'ibc' => 'bc\.',
-      "ibc" => '(?:bc\.|bc-loc\.)',
-      "iduke" => 'duke\.',
-      "iloc" => "loc",
-      "incsu" => 'ncsu\.',
-      "innc" => "nnc",
-      "inrlf" => "nrlf",
-      "ipst" => 'pst\.',
-      "isrlf" => "srlf",
-      "iucla" => "ucla",
-      "iucd" => "ucd",
-      "iufl" => "(?:ufl|ufdc)",
-      "iuiuc" => "uiuc",
-      "iunc" => 'unc\.',
-      "mdl" => 'mdl\.',
-      "mwica" => "mwica",
-      "mmet" => "tu",
-      "mu" => "uma",
-      "nrlf" => "(?:nrlf-ucsc|nrlf-ucsf|nrlf)",
-      "pst" => 'pst\.',
-      "qmm" => "qmm",
-      "txcm" => "tam",
-      # 'ucm' => 'ucm\.',
-      "ucm" => '(?:ucm\.|ucm-loc\.)',
-      # 'uiucl' => 'uiuc-loc',
-      "uiucl" => "uiuc",
-      "usu" => 'usu\.',
-      "uva" => 'uva\.',
-      "gri" => "cmalg",
-      "umlaw" => "miu",
-      "umdb" => "miu",
-      "umbus" => "miu",
-      "umdcmp" => "miu",
-      "umprivate" => "miu",
-      "gwla" => "miu",
-      "iau" => "uiowa",
-      "ctu" => "ucw",
-      "ucbk" => "(?:ucbk|ucb|ucb-2|cul)",
-      "geu" => "emu",
-      "nbb" => "miu",
-      "aubru" => "uql-1"
-    }
-    load_additional_mappings_from_collections_table
+    # collection code => prefixes
+    @prefix_map = Hash.new { |h, k| h[k] = [] }
+    Dir.glob("config/hathitrust_contrib_configs/*.config").each do |confile|
+      conf = parse_config(confile)
+      if conf.has_key?("collection") && conf.has_key?("campus_code")
+        conf["collection"].each do |coll|
+          @prefix_map[coll] += conf["campus_code"]
+          @prefix_map[coll].uniq!
+        end
+      end
+    end
   end
 
   def [](collection_code)
@@ -61,16 +26,22 @@ class SdrNumPrefixes
   def each
     return enum_for(:each) unless block_given?
 
-    @prefix_map.each { |collection_code, prefix| yield [collection_code, prefix] }
+    @prefix_map.each { |collection_code, prefixes| yield [collection_code, prefixes] }
   end
 
   private
 
-  def load_additional_mappings_from_collections_table
-    Services.collections.each do |collection_code, coll|
-      unless @prefix_map.has_key? collection_code.downcase
-        @prefix_map[collection_code.downcase] = collection_code.downcase
-      end
+  # converts the config to a hash
+  def parse_config(fin)
+    conf = {}
+    File.open(fin).each do |line|
+      left, right = line.chomp.split(" = ")
+      next if right.nil?
+      key = left.split(".").last.strip.downcase
+      # some values are formatted as arrays # miu-multi.collection = [MIU,GWLA,UMLAW...]
+      values = right.gsub(/[\[\]]/, "").split(",").map { |v| v.strip.downcase }
+      conf[key] = values
     end
+    conf
   end
 end
