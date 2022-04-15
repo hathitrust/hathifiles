@@ -24,8 +24,15 @@ def run(intype)
     0
   end
 
-  outfile = Settings.hathifiles_dir + "hathi_upd_#{indate}.txt"
+  # Hathifiles date is one day later than the Zephir file
+  outdate = Date.parse(indate).next_day.strftime("%Y%m%d")
+
+  outfile = Settings.hathifiles_dir + "hathi_#{intype}_#{outdate}.txt"
   fout = File.open(outfile, "w")
+
+  puts "Infile: #{infile}"
+  puts "Outfile: #{outfile}"
+  puts "Cutoff: #{cutoff}"
 
   fin.each do |line|
     BibRecord.new(line).hathifile_records.each do |rec|
@@ -59,6 +66,9 @@ def run(intype)
       fout.puts outrec.join("\t")
     end
   end
+
+  fout.close
+  system("gzip #{outfile}")
 end
 
 run(ARGV.shift) if __FILE__ == $PROGRAM_NAME
