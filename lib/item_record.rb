@@ -86,7 +86,7 @@ class ItemRecord
 
   # From the rights database
   def content_provider_code
-    @content_provider_code ||= Services.collections[collection_code].content_provider_cluster
+    @content_provider_code ||= Services.collections[collection_code]&.content_provider_cluster || collection_code
   end
 
   # From the rights database
@@ -95,7 +95,7 @@ class ItemRecord
   end
 
   def access_profile
-    Services.access_profiles[access_profile_code].name || access_profile_code
+    Services.access_profiles[access_profile_code]&.name || access_profile_code
   end
 
   def to_h

@@ -151,13 +151,11 @@ class BibRecord
       next unless /^sdr-/.match?(sdr)
       # remove leading sdr-
       sdr.gsub!(/^sdr-/, "")
-      # remove leading ia-
-      sdr.gsub!(/^ia-/, "")
       Services.sdrnum_prefix_map.each do |collection_code, prefixes|
         prefixes.each do |prefix|
           sdr_match = /^#{prefix}([.a-zA-Z0-9-]+)/.match(sdr)
           next if sdr_match.nil?
-          @sdr_nums[collection_code] << sdr_match[1].gsub(/^-loc/, "")
+          @sdr_nums[collection_code] << sdr_match[1].gsub(/^\./, "")
         end
       end
     end

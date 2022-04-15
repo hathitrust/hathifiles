@@ -94,18 +94,26 @@ RSpec.describe BibRecord do
 
   describe "#sdr_nums" do
     it "assembles a mapping of collection codes to bib numbers" do
-      expect(br.sdr_nums).to eq({"miu" => [".990058493500106381"],
-                                 "gwla" => [".990058493500106381"],
-                                 "nbb" => [".990058493500106381"],
-                                "umbus" => [".990058493500106381"],
-                                "umprivate" => [".990058493500106381"],
-                                "umlaw" => [".990058493500106381"],
-                                "umdb" => [".990058493500106381"],
-                                "umdcmp" => [".990058493500106381"],
-                                "uuhhs" => [".990058493500106381"],
+      expect(br.sdr_nums).to eq({"miu" => ["990058493500106381"],
+                                 "gwla" => ["990058493500106381"],
+                                 "nbb" => ["990058493500106381"],
+                                "umbus" => ["990058493500106381"],
+                                "umprivate" => ["990058493500106381"],
+                                "umlaw" => ["990058493500106381"],
+                                "umdb" => ["990058493500106381"],
+                                "umdcmp" => ["990058493500106381"],
+                                "uuhhs" => ["990058493500106381"],
                                  "pur" => ["1295679"],
                                  # this is wrong, but hopefully doesn't matter
                                  "pu" => ["r1295679"]})
+    end
+
+    it "handles ILOC items appropriately" do
+      # these were failing because we were removing leading "ia-" which was
+      # necessary before using the cdl contrib configs directly
+      m = File.read(File.dirname(__FILE__) + "/data/ialoc_sdr_nums.json")
+      br = described_class.new(m)
+      expect(br.sdr_nums["iloc"]).to eq(["8200786"])
     end
   end
 
