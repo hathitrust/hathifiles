@@ -144,6 +144,8 @@ class BibRecord
      author: author}
   end
 
+  # Item records need a map of collection code to bib record id assembled from
+  # the 035s and the sdrnum_prefix_map
   def sdr_nums
     return @sdr_nums unless @sdr_nums.nil?
     @sdr_nums = Hash.new { |h, coll| h[coll] = [] }
@@ -152,6 +154,7 @@ class BibRecord
       # remove leading sdr-
       sdr.gsub!(/^sdr-/, "")
       Services.sdrnum_prefix_map.each do |collection_code, prefixes|
+        # e.g. yale"=>["yale-loc", "yale"]
         prefixes.each do |prefix|
           sdr_match = /^#{prefix}([.a-zA-Z0-9-]+)/.match(sdr)
           next if sdr_match.nil?

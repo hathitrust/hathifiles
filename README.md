@@ -5,9 +5,17 @@
 `docker-compose up -d`
 
 # Hathifiles Generation
-Generates a metadata extract for public use. End user documentation is available on the [Hathitrust website](https://www.hathitrust.org/hathifiles_description).
+`bundle exec ruby jobs/generate_hathifile.rb (upd|full)`
+
+Generates a metadata extract for public use, from the zephir `_upd_` and `_full_` files.
+
+# Hathifiles Listing
+`bundle exec ruby jobs/update_hathifile_listing.rb`
+
+Moves Hathifiles to the appropriate directory and generates the [listing on the website](https://www.hathitrust.org/hathifiles).
 
 ## Field Definitions
+End user documentation is available on the [Hathitrust website](https://www.hathitrust.org/hathifiles_description).
 The following is a more precise definition of the MARC extractions.
 
 |  Column #  | Data element |  Field name in [header file] (https://www.hathitrust.org/filebrowser/download/269539) | Description    |
