@@ -2,6 +2,7 @@
 
 require "services"
 
+# Builds a mapping of collection codes to sdr num prefixes based on the cdl contrib configs
 class SdrNumPrefixes
   attr_reader :prefix_map
 
