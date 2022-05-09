@@ -15,7 +15,7 @@ services:
       DB_CONNECTION_STRING: "mysql2://ht_rights:ht_rights@mariadb/ht"
 
   mariadb:
-    image: ghcr.io/hathitrust/db-image
+    image: ghcr.io/hathitrust/db-image:latest
     restart: always
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: 1 

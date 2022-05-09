@@ -66,5 +66,12 @@ RSpec.describe HathifileListing do
       list = JSON.parse(File.read(@tmp_web_dir + "/hathi_file_list.json"))
       expect(list.count).to be_between(72, 73)
     end
+
+    it "maintains the original creation dates" do
+      hflist.run
+      arch_file = Dir.glob(@tmp_hathifiles_dir + "/*").last
+      web_file = Dir.glob(@tmp_web_dir + "/*").last
+      expect(File.mtime(arch_file)).to eq(File.mtime(web_file))
+    end
   end
 end
