@@ -26,7 +26,7 @@ class HathifileListing
 
       # if less than days_retro days old, make sure we have it in the web dir
       if hfile_date > cutoff
-        FileUtils.cp(hfile, hathifile_web_dir)
+        FileUtils.cp(hfile, hathifile_web_dir, preserve: true)
       end
     end
 

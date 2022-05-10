@@ -2,5 +2,6 @@
 *.json
 *.txt
 *.tmp
-tmp_hathifiles_directory
+*.gz
+tmp_hathifiles_archive
 tmp_web_hathifiles
