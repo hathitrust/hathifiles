@@ -25,7 +25,7 @@ class HathifileListing
       hfile_date = Date.parse(File.basename(hfile, ".txt.gz").split("_")[2])
 
       # if less than days_retro days old, make sure we have it in the web dir
-      if hfile_date > cutoff
+      if hfile_date > cutoff && !File.exist?(hathifile_web_dir + hfile)
         FileUtils.cp(hfile, hathifile_web_dir, preserve: true)
       end
     end
