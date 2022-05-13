@@ -26,6 +26,7 @@ RSpec.describe HathifileListing do
         Dir.mktmpdir(Settings.hathifiles_web_path) do |dir|
           @tmp_web_dir = dir
           example.run
+          Dir.glob(@tmp_web_dir + "/*").each { |file| File.delete(file) }
         end
       end
     end
