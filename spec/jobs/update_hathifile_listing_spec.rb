@@ -68,6 +68,14 @@ RSpec.describe HathifileListing do
       expect(list.count).to be_between(72, 73)
     end
 
+    it "sorts the json file list" do
+      hflist.run
+      list = JSON.parse(File.read(@tmp_web_dir + "/hathi_file_list.json"))
+      filenames = list.map { |hf| hf["filename"] }
+      sorted = filenames.sort
+      expect(filenames).to eq(sorted)
+    end
+
     it "maintains the original creation dates" do
       hflist.run
       arch_file = Dir.glob(@tmp_hathifiles_dir + "/*").last

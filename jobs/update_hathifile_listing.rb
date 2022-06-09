@@ -48,7 +48,7 @@ class HathifileListing
     end
 
     file_list_file = File.open(hathifile_listing, "w")
-    file_list_file.puts file_list.to_json
+    file_list_file.puts file_list.sort_by { |hf| hf["filename"] }.to_json
   end
 end
 
