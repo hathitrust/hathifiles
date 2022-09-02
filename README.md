@@ -1,8 +1,13 @@
-`docker-compose build hf`
+# Getting Started
 
-`docker-compose run --rm hf bundle install`
-
-`docker-compose up -d`
+```bash
+git clone https://github.com/hathitrust/hathifiles
+git submodule init
+git submodule update
+docker-compose build hf
+docker-compose run --rm hf bundle install
+docker-compose up -d
+```
 
 # Hathifiles Generation
 `bundle exec ruby jobs/generate_hathifile.rb (upd|full)`
