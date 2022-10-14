@@ -19,5 +19,6 @@ group :development, :test do
   gem "standardrb"
   gem "rspec"
   gem "simplecov"
+  gem "simplecov-lcov"
   gem "factory_bot"
 end

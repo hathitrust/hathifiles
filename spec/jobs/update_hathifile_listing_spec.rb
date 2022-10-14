@@ -80,7 +80,7 @@ RSpec.describe HathifileListing do
       hflist.run
       arch_file = Dir.glob(@tmp_hathifiles_dir + "/*").last
       web_file = Dir.glob(@tmp_web_dir + "/*").last
-      expect(File.mtime(arch_file)).to eq(File.mtime(web_file))
+      expect(File.mtime(arch_file).to_i).to eq(File.mtime(web_file).to_i)
     end
   end
 end
