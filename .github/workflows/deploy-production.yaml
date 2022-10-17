@@ -13,7 +13,7 @@ jobs:
     environment: production
     steps:
     - name: Deploy to Production
-      uses: mlibrary/deploy-to-kubernetes@just-set-image
+      uses: mlibrary/deploy-to-kubernetes@v3
       with:
         registry_username: ${{ github.actor }}
         registry_token: ${{ secrets.GITHUB_TOKEN }}
@@ -22,6 +22,6 @@ jobs:
         cluster_server: ${{ secrets.KUBERNETES_SERVER }}
         namespace_token: ${{ secrets.KUBERNETES_TOKEN }}
         namespace: hathifiles
-        type: 'all'
-        resource: "--selector=app=hathifiles"
+        resource_type: 'all'
+        resource_name: "--selector=app=hathifiles"
         container: hathifiles
