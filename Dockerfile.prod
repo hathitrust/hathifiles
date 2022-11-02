@@ -1,4 +1,4 @@
-FROM ruby:2.6
+FROM ruby:3.1
 LABEL org.opencontainers.image.source https://github.com/hathitrust/hathifiles
 
 ARG UNAME=holdings
