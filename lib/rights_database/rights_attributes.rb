@@ -29,7 +29,7 @@ module RightsDatabase
           :name,
           :dscr)
         .as_hash(:id)
-        .transform_values { |h| Attribute.new(h) }
+        .transform_values { |h| Attribute.new(**h) }
     end
 
     def [](attr)

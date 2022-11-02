@@ -27,7 +27,7 @@ module RightsDatabase
           :name,
           :dscr)
         .as_hash(:id)
-        .transform_values { |h| Reason.new(h) }
+        .transform_values { |h| Reason.new(**h) }
     end
 
     def [](reason)

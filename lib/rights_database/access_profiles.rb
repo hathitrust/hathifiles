@@ -29,7 +29,7 @@ module RightsDatabase
           :name,
           :dscr)
         .as_hash(:id)
-        .transform_values { |h| AccessProfile.new(h) }
+        .transform_values { |h| AccessProfile.new(**h) }
     end
 
     def [](profile_id)
