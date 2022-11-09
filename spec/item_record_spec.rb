@@ -37,8 +37,8 @@ RSpec.describe ItemRecord do
     # TODO: test what happens where there is more than one SDR for the collection
     # Can have multiple bib nums from the same source on the same Zeph record
     it "extracts the source_bib_num" do
-      ir.sdr_nums = {"miu" => ".990058493500106381"}
-      expect(ir.source_bib_num).to eq(".990058493500106381")
+      ir.sdr_nums = {"miu" => "990058493500106381"}
+      expect(ir.source_bib_num).to eq("990058493500106381")
     end
 
     it "extracts the rights_reason_code" do

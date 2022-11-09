@@ -6,10 +6,13 @@ require "services"
 class SdrNumPrefixes
   attr_reader :prefix_map
 
-  def initialize
+  def initialize(config_dir = "#{__dir__}/../config/hathitrust_contrib_configs")
     # collection code => prefixes
     @prefix_map = Hash.new { |h, k| h[k] = [] }
-    Dir.glob("config/hathitrust_contrib_configs/*.config").each do |confile|
+    conf_files = Dir.glob(File.join(config_dir, "*.config"))
+    raise "No configs found in #{config_dir}" if conf_files.empty?
+
+    conf_files.each do |confile|
       conf = parse_config(confile)
       if conf.has_key?("collection") && conf.has_key?("campus_code")
         conf["collection"].each do |coll|
