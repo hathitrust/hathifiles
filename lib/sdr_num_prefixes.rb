@@ -21,6 +21,8 @@ class SdrNumPrefixes
         end
       end
     end
+
+    @prefix_map.default_proc = proc { |h, k| h[k] = [k] }
   end
 
   def [](collection_code)
