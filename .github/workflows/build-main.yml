@@ -21,3 +21,4 @@ jobs:
           tag: ${{ github.sha }}
           push_latest: true
           registry_token: ${{ github.token }}
+          submodules: recursive
