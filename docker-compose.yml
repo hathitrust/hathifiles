@@ -4,8 +4,6 @@ services:
 
   hf:
     build: .
-    ports:
-      - "4567:4567"
     volumes:
       - .:/usr/src/app
       - gem_cache:/gems
@@ -13,6 +11,7 @@ services:
       - mariadb
     environment:
       DB_CONNECTION_STRING: "mysql2://ht_rights:ht_rights@mariadb/ht"
+      PUSHGATEWAY: http://pushgateway:9091
 
   mariadb:
     image: ghcr.io/hathitrust/db-image:latest
@@ -22,6 +21,11 @@ services:
       MYSQL_DATABASE: ht
       MYSQL_USER: ht_rights
       MYSQL_PASSWORD: ht_rights
+
+  pushgateway:
+    image: prom/pushgateway
+    ports:
+      - 9092:9091
 
 volumes:
   gem_cache:

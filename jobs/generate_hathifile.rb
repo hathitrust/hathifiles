@@ -3,8 +3,8 @@
 
 require "bib_record"
 require "date"
-require "pry"
 require "settings"
+require "push_metrics"
 
 class GenerateHathifile
   attr_reader :intype
@@ -14,6 +14,7 @@ class GenerateHathifile
   end
 
   def run
+    tracker = PushMetrics.new(batch_size: 10_000, job_name: "generate_hathifile_#{intype}")
     infile = Dir.glob(File.join(Settings.zephir_dir, "zephir_#{intype}*")).max
 
     fin = if /\.gz$/.match?(infile)
@@ -23,7 +24,7 @@ class GenerateHathifile
     end
 
     # we only want to write some of the items in the zephr records
-    indate = File.basename(infile).split("_")[2].split("\.").first
+    indate = File.basename(infile).split("_")[2].split(".").first
     cutoff = if /upd/.match?(infile)
       # cutoff = Date.today.prev_day.strftime("%Y%m%d").to_i
       indate.to_i - 1
@@ -72,10 +73,13 @@ class GenerateHathifile
           (rec[:author].join(", ") || "")]
         fout.puts outrec.join("\t")
       end
+      tracker.increment_and_log_batch_line
     end
 
     fout.close
     system("gzip #{outfile}")
+
+    tracker.log_final_line
   end
 end
 

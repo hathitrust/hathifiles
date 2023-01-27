@@ -2,6 +2,7 @@
 
 require "spec_helper"
 require "zlib"
+require "faraday"
 require_relative "../../jobs/generate_hathifile"
 
 RSpec.describe GenerateHathifile do
@@ -32,5 +33,19 @@ RSpec.describe GenerateHathifile do
     # The items as they were output on that day
     expected = File.read("#{__dir__}/../data/000018677-20220808.tsv")
     expect(generated).to eq(expected)
+  end
+
+  it "pushes expected metrics to pushgateway" do
+    pm_endpoint = ENV["PUSHGATEWAY"]
+    Faraday.delete("#{pm_endpoint}/metrics/job/generate_hathifile_test")
+
+    # run as above
+    # One particular UC record from a day in August 2022
+    system("cp #{__dir__}/../data/000018677-20220807.json #{Settings.zephir_dir}/zephir_test_20220807.json")
+    GenerateHathifile.new("test").run
+    metrics = Faraday.get("#{pm_endpoint}/metrics").body
+
+    expect(metrics).to match(/^job_last_success\S*job="generate_hathifile_test"\S* \S+/m)
+      .and match(/^job_records_processed\S*job="generate_hathifile_test"\S* 1$/m)
   end
 end

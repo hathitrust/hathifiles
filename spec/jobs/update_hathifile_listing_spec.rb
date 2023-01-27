@@ -82,5 +82,16 @@ RSpec.describe HathifileListing do
       web_file = Dir.glob(@tmp_web_dir + "/*").last
       expect(File.mtime(arch_file).to_i).to eq(File.mtime(web_file).to_i)
     end
+
+    it "pushes expected metrics to pushgateway" do
+      pm_endpoint = ENV["PUSHGATEWAY"]
+      Faraday.delete("#{pm_endpoint}/metrics/job/update_hathifile_listing")
+
+      hflist.run
+      metrics = Faraday.get("#{pm_endpoint}/metrics").body
+
+      expect(metrics).to match(/^job_last_success\S*job="update_hathifile_listing"\S* \S+/m)
+        .and match(/^job_records_processed\S*job="update_hathifile_listing"\S* [^0]\d*$/m)
+    end
   end
 end

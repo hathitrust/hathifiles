@@ -17,6 +17,7 @@ class HathifileListing
   end
 
   def run
+    tracker = PushMetrics.new(batch_size: 1, job_name: "update_hathifile_listing")
     url_base = "https://www.hathitrust.org/sites/www.hathitrust.org/files/hathifiles/"
     file_list = []
     cutoff = Date.today - days_retro
@@ -45,10 +46,12 @@ class HathifileListing
                 "url" => url_base + File.basename(hfile)}
         file_list << file
       end
+      tracker.incr
     end
 
     file_list_file = File.open(hathifile_listing, "w")
     file_list_file.puts file_list.sort_by { |hf| hf["filename"] }.to_json
+    tracker.log_final_line
   end
 end
 
