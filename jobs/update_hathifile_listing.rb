@@ -5,6 +5,7 @@ require "date"
 require "fileutils"
 require "json"
 require "settings"
+require "push_metrics"
 
 class HathifileListing
   attr_accessor :url_base, :file_list, :cutoff, :hathifile_dir, :hathifile_web_dir, :hathifile_listing, :days_retro
