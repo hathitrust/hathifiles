@@ -10,7 +10,7 @@ module RightsDatabase
     def initialize(item_id:, attribute: nil, reason: nil, source: nil, time: nil, note: nil, access_profile: nil,
       user: nil)
       @item_id = item_id
-      @namespace, @id = @item_id.split(/\./, 2)
+      @namespace, @id = @item_id.split(".", 2)
       if @attribute.nil?
         load_from_db
       else

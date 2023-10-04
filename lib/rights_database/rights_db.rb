@@ -16,8 +16,8 @@ module RightsDatabase
     attr_reader :rawdb
     attr_accessor :connection_string
 
-    def initialize(connection_string = ENV["DB_CONNECTION_STRING"], **kwargs)
-      @rawdb = self.class.connection(connection_string, **kwargs)
+    def initialize(connection_string = ENV["DB_CONNECTION_STRING"], **)
+      @rawdb = self.class.connection(connection_string, **)
       super(@rawdb)
     end
 
@@ -46,8 +46,6 @@ module RightsDatabase
       else
         Sequel.connect(connection_string)
       end
-    rescue Sequel::DatabaseConnectionError => e
-      raise e
     end
 
     class << self
