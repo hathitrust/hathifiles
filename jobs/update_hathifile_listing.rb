@@ -19,7 +19,7 @@ class HathifileListing
 
   def run
     tracker = PushMetrics.new(batch_size: 1, job_name: "update_hathifile_listing")
-    url_base = "https://www.hathitrust.org/sites/www.hathitrust.org/files/hathifiles/"
+    url_base = "https://www.hathitrust.org/files/hathifiles/"
     file_list = []
     cutoff = Date.today - days_retro
 
