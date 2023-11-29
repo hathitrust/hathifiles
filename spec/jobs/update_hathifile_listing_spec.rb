@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "faraday"
 require "spec_helper"
 require_relative "../../jobs/update_hathifile_listing"
 
