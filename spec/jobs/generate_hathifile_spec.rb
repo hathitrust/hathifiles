@@ -58,7 +58,7 @@ RSpec.describe GenerateHathifile do
     GenerateHathifile.new.run
     metrics = Faraday.get("#{pm_endpoint}/metrics").body
 
-    expect(metrics).to match(/^job_last_success\S*job="generate_hathifile_full"\S* \S+/m)
-      .and match(/^job_records_processed\S*job="generate_hathifile_full"\S* 1$/m)
+    expect(metrics).to match(/^job_last_success\S*job="generate_hathifiles"\S* \S+/m)
+      .and match(/^job_records_processed\S*job="generate_hathifiles"\S* 1$/m)
   end
 end
