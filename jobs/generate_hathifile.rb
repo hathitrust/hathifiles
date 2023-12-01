@@ -8,6 +8,12 @@ require "push_metrics"
 require "zephir_files"
 
 class GenerateHathifile
+  attr_reader :tracker
+
+  def initialize
+    @tracker = PushMetrics.new(batch_size: 10_000, job_name: "generate_hathifiles")
+  end
+
   def run
     zephir_files = ZephirFiles.new(
       zephir_dir: Settings.zephir_dir,
@@ -16,12 +22,11 @@ class GenerateHathifile
     zephir_files.unprocessed.each do |zephir_file|
       run_file zephir_file
     end
+    tracker.log_final_line
   end
 
   def run_file(zephir_file)
     infile = File.join(Settings.zephir_dir, zephir_file.filename)
-    tracker = PushMetrics.new(batch_size: 10_000, job_name: "generate_hathifile_#{zephir_file.type}")
-
     fin = if /\.gz$/.match?(infile)
       Zlib::GzipReader.open(infile)
     else
@@ -56,7 +61,6 @@ class GenerateHathifile
       FileUtils.mv(gzfile, outfile)
     end
     fin.close
-    tracker.log_final_line
   end
 
   def record_from_bib_record(rec)
