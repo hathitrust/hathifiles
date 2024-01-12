@@ -4,6 +4,7 @@
 require "bib_record"
 require "date"
 require "settings"
+require "services"
 require "push_metrics"
 require "zephir_files"
 
@@ -15,10 +16,12 @@ class GenerateHathifile
   end
 
   def run
+    Services[:logger].info "zephir_dir: #{Settings.zephir_dir}, hathifiles_dir: #{Settings.hathifiles_dir}"
     zephir_files = ZephirFiles.new(
       zephir_dir: Settings.zephir_dir,
       hathifiles_dir: Settings.hathifiles_dir
     )
+    Services[:logger].info "Unprocessed Zephir files: #{zephir_files.unprocessed}"
     zephir_files.unprocessed.each do |zephir_file|
       run_file zephir_file
     end
@@ -27,6 +30,7 @@ class GenerateHathifile
 
   def run_file(zephir_file)
     infile = File.join(Settings.zephir_dir, zephir_file.filename)
+    Services[:logger].info "Processing file: #{infile}"
     fin = if /\.gz$/.match?(infile)
       Zlib::GzipReader.open(infile)
     else
@@ -42,9 +46,8 @@ class GenerateHathifile
 
     outfile = File.join(Settings.hathifiles_dir, zephir_file.hathifile)
 
-    puts "Infile: #{infile}"
-    puts "Outfile: #{outfile}"
-    puts "Cutoff: #{cutoff}"
+    Services[:logger].info "Outfile: #{outfile}"
+    Services[:logger].info "Cutoff: #{cutoff}"
 
     Tempfile.create do |fout|
       fin.each do |line|
@@ -55,9 +58,11 @@ class GenerateHathifile
         tracker.increment_and_log_batch_line
       end
       fout.flush
+      Services[:logger].info "Gzipping: #{fout.path}"
       system("gzip #{fout.path}")
       gzfile = fout.path + ".gz"
       # Move tempfile into place
+      Services[:logger].info "Moving tempfile #{gzfile} -> #{outfile}"
       FileUtils.mv(gzfile, outfile)
     end
     fin.close
