@@ -40,12 +40,10 @@ class GenerateHathifile
     # We only want to write some of the items in the zephr records:
     # For upd files we only include entries dated on or after the
     # datestamp in the Zephir file name.
-    # For full files we want everything, so the cutoff is set to nil, which
+    # For full files we want everything; cutoff defaults to nil, which
     # short-circuits the cutoff check.
     cutoff = if zephir_file.type == "upd"
       zephir_file.date
-    else
-      nil
     end
 
     outfile = File.join(Settings.hathifiles_dir, zephir_file.hathifile)
