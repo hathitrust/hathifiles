@@ -37,23 +37,27 @@ class GenerateHathifile
       File.open(infile)
     end
 
-    # we only want to write some of the items in the zephr records
+    # We only want to write some of the items in the zephr records:
+    # For upd files we only include entries dated on or after the
+    # datestamp in the Zephir file name.
+    # For full files we want everything; cutoff defaults to nil, which
+    # short-circuits the cutoff check.
     cutoff = if zephir_file.type == "upd"
-      zephir_file.date.strftime("%Y%m%d").to_i
-    else
-      0
+      zephir_file.date
     end
 
     outfile = File.join(Settings.hathifiles_dir, zephir_file.hathifile)
 
     Services[:logger].info "Outfile: #{outfile}"
-    Services[:logger].info "Cutoff: #{cutoff}"
+    Services[:logger].info "Cutoff: #{cutoff.inspect}"
 
     Tempfile.create do |fout|
       fin.each do |line|
         BibRecord.new(line).hathifile_records.each do |rec|
-          next unless rec[:update_date].to_i > cutoff.to_i
-          fout.puts record_from_bib_record(rec).join("\t")
+          record_date = Date.parse rec[:update_date]
+          if cutoff.nil? || record_date >= cutoff
+            fout.puts record_from_bib_record(rec).join("\t")
+          end
         end
         tracker.increment_and_log_batch_line
       end
