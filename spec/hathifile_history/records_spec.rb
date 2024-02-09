@@ -143,9 +143,12 @@ RSpec.describe HathifileHistory::Records do
 
   describe "#dump_to_ndj" do
     it "creates readable dump file" do
-      recs = records.add(htid: TEST_HTID, recid: TEST_RECID, yyyymm: TEST_YYYYMM)
-      recs.dump_to_ndj TEST_NDJ_FILE
-      expect(File.readable?(TEST_NDJ_FILE)).to eq true
+      Dir.mktmpdir("hathifiles") do |hathifiles_dir|
+        destination = File.join(hathifiles_dir, TEST_NDJ_FILE)
+        recs = records.add(htid: TEST_HTID, recid: TEST_RECID, yyyymm: TEST_YYYYMM)
+        recs.dump_to_ndj destination
+        expect(File.readable?(destination)).to eq true
+      end
     end
   end
 
