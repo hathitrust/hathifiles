@@ -14,6 +14,30 @@ class BibRecord
   attr_accessor :marc
   attr_writer :ht_bib_key, :oclc_num, :isbn, :issn, :lccn, :title, :imprint, :pub_place, :bib_fmt, :lang, :author, :us_gov_doc_flag
 
+  # TODO: This is a reimplementation of
+  # https://github.com/mlibrary/traject_umich_format/blob/7d355a5be133dc86f8795954fdd2e01355758309/lib/traject/umich_format/bib_format.rb#L18
+  def self.bib_fmt(rec_type:, bib_level:)
+    if ["a", "t"].include?(rec_type) && ["a", "c", "d", "m"].include?(bib_level)
+      "BK"
+    elsif rec_type == "m" && ["a", "c", "d", "m", "s"].include?(bib_level)
+      "CF"
+    elsif ["g", "k", "o", "r"].include?(rec_type) && ["a", "b", "c", "d", "m", "s"].include?(bib_level)
+      "VM"
+    elsif ["c", "d", "i", "j"].include?(rec_type) && ["a", "b", "c", "d", "m", "s"].include?(bib_level)
+      "MU"
+    elsif ["e", "f"].include?(rec_type) && ["a", "b", "c", "d", "m", "s"].include?(bib_level)
+      "MP"
+    elsif rec_type == "a" && ["b", "s", "i"].include?(bib_level)
+      "SE"
+    elsif ["b", "p"].include?(rec_type) && ["a", "b", "c", "d", "m", "s"].include?(bib_level)
+      "MX"
+    elsif bib_level == "s"
+      "SE"
+    else
+      "XX"
+    end
+  end
+
   def initialize(marc_in_json)
     @marc = MARC::Record.new_from_hash(JSON.parse(marc_in_json))
   end
@@ -66,32 +90,8 @@ class BibRecord
     @pub_place ||= PlaceOfPublication.new(marc)
   end
 
-  # TODO: This is a reimplementation of
-  # https://github.com/mlibrary/traject_umich_format/blob/7d355a5be133dc86f8795954fdd2e01355758309/lib/traject/umich_format/bib_format.rb#L18
   def bib_fmt
-    return @bib_fmt unless @bib_fmt.nil?
-    rec_type = marc.leader[6]
-    bib_level = marc.leader[7]
-    @bib_fmt = if ["a", "t"].include?(rec_type) && ["a", "c", "d", "m"].include?(bib_level)
-      "BK"
-    elsif rec_type == "m" && ["a", "c", "d", "m", "s"].include?(bib_level)
-      "CF"
-    elsif ["g", "k", "o", "r"].include?(rec_type) && ["a", "b", "c", "d", "m", "s"].include?(bib_level)
-      "VM"
-    elsif ["c", "d", "i", "j"].include?(rec_type) && ["a", "b", "c", "d", "m", "s"].include?(bib_level)
-      "MU"
-    elsif ["e", "f"].include?(rec_type) && ["a", "b", "c", "d", "m", "s"].include?(bib_level)
-      "MP"
-    elsif rec_type == "a" && ["b", "s", "i"].include?(bib_level)
-      "SE"
-    elsif ["b", "p"].include?(rec_type) && ["a", "b", "c", "d", "m", "s"].include?(bib_level)
-      "MX"
-    elsif bib_level == "s"
-      "SE"
-    else
-      "XX"
-    end
-    @bib_fmt
+    @bib_fmt ||= self.class.bib_fmt(rec_type: marc.leader[6], bib_level: marc.leader[7])
   end
 
   def lang
