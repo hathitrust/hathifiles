@@ -7,8 +7,6 @@ RUN apt-get update -yqq && apt-get install -yqq --no-install-recommends \
   nodejs \
   netcat-traditional
 
-RUN wget -O /usr/local/bin/wait-for https://github.com/eficode/wait-for/releases/download/v2.2.3/wait-for; chmod +x /usr/local/bin/wait-for
-
 # COPY Gemfile* /usr/src/app/
 WORKDIR /usr/src/app
 #
