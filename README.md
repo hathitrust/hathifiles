@@ -4,13 +4,20 @@
 
 # Getting Started
 
+## Developer Setup
+
 ```bash
 git clone https://github.com/hathitrust/hathifiles
 git submodule init
 git submodule update
-docker-compose build hf
-docker-compose run --rm hf bundle install
-docker-compose up -d
+bin/setup_test.sh
+```
+
+## Running Tests
+
+```bash
+docker compose run --rm hf bundle exec standardrb
+docker compose run --rm hf bundle exec rspec
 ```
 
 # Hathifiles Generation
@@ -60,17 +67,6 @@ The following is a more precise definition of the MARC extractions.
 
 We want to generate redirects for catalog records that have been completely
 replaced by.
-
-## Developer Setup
-
-```
-git clone <URL/protocol of choice>
-cd hathifile_history
-docker-compose build
-docker-compose run --rm test bin/setup
-docker-compose run --rm test
-docker-compose run --rm test bundle exec standardrb
-```
 
 ## Basic usage: add_monthly_and_dump_redirects.rb
 
