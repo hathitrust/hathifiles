@@ -7,6 +7,25 @@ RSpec.describe BibRecord do
   let(:m) { File.read(File.dirname(__FILE__) + "/data/bib_rec.json") }
   let(:br) { described_class.new(m) }
 
+  describe ".bib_fmt" do
+    {
+      "BK" => %w[aa ac ad am ta tc td tm],
+      "CF" => %w[ma mc md mm ms],
+      "VM" => %w[ga gb gc gd gm gs ka kb kc kd km ks oa ob oc od om os ra rb rc rd rm rs],
+      "MU" => %w[ca cb cc cd cm cs da db dc dd dm ds ia ib ic id im is ja jb jc jd jm js],
+      "MP" => %w[ea eb ec ed em es fa fb fc fd fm fs],
+      "SE" => %w[ab ai as ts],
+      "MX" => %w[ba bb bc bd bm bs pa pb pc pd pm ps],
+      "XX" => %w[xx yy zz]
+    }.each do |fmt, combos|
+      combos.each do |combo|
+        it "classifies rec_type=#{combo[0]} bib_level=#{combo[1]} as #{fmt}" do
+          expect(described_class.bib_fmt(rec_type: combo[0], bib_level: combo[1])).to eq(fmt)
+        end
+      end
+    end
+  end
+
   describe "#initialize" do
     it "reads json into marc field" do
       expect(br.marc).to be_a MARC::Record

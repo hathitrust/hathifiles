@@ -18,10 +18,10 @@ jobs:
         run: ./bin/setup_test.sh
 
       - name: Run standardrb
-        run: docker-compose run --rm hf bundle exec standardrb
+        run: docker compose run --rm hf bundle exec standardrb
 
       - name: Run tests
-        run: docker-compose run --rm hf bin/wait-for mariadb:3306 pushgateway:9091 -- bundle exec rspec
+        run: docker compose run --rm hf bundle exec rspec
 
       - name: Report to Coveralls
         uses: coverallsapp/github-action@1.1.3
