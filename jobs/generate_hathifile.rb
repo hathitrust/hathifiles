@@ -104,4 +104,6 @@ class GenerateHathifile
   end
 end
 
+# Force logger to flush STDOUT on write so we can see what out Argo Workflows are doing.
+$stdout.sync = true
 GenerateHathifile.new.run if __FILE__ == $PROGRAM_NAME
