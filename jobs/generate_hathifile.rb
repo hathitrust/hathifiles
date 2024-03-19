@@ -52,17 +52,13 @@ class GenerateHathifile
     Services[:logger].info "Cutoff: #{cutoff.inspect}"
 
     Tempfile.create do |fout|
-      Services[:logger].info "temp file: #{fout}"
       fin.each do |line|
-        Services[:logger].info "processing line"
         BibRecord.new(line).hathifile_records.each do |rec|
-          Services[:logger].info "processing line"
           record_date = Date.parse rec[:update_date]
           if cutoff.nil? || record_date >= cutoff
             fout.puts record_from_bib_record(rec).join("\t")
           end
         end
-        Services[:logger].info "updating tracker"
         tracker.increment_and_log_batch_line
       end
       fout.flush
