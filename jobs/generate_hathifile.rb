@@ -51,8 +51,12 @@ class GenerateHathifile
     Services[:logger].info "Outfile: #{outfile}"
     Services[:logger].info "Cutoff: #{cutoff.inspect}"
 
-    Tempfile.create do |fout|
-      fin.each do |line|
+    Tempfile.create('hathifiles') do |fout|
+      Services[:logger].info "writing to tempfile #{fout.path}"
+      fin.each_with_index do |line, i|
+        if i % 10_000 == 0
+          Services[:logger].info "writing line #{i}"
+        end
         BibRecord.new(line).hathifile_records.each do |rec|
           record_date = Date.parse rec[:update_date]
           if cutoff.nil? || record_date >= cutoff
