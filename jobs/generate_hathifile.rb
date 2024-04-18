@@ -40,8 +40,12 @@ class GenerateHathifile
     outfile = File.join(Settings.hathifiles_dir, zephir_file.hathifile)
     Services[:logger].info "Outfile: #{outfile}"
 
-    Tempfile.create do |fout|
-      fin.each do |line|
+    Tempfile.create("hathifiles") do |fout|
+      Services[:logger].info "writing to tempfile #{fout.path}"
+      fin.each_with_index do |line, i|
+        if i % 100_000 == 0
+          Services[:logger].info "writing line #{i}"
+        end
         BibRecord.new(line).hathifile_records.each do |rec|
           fout.puts record_from_bib_record(rec).join("\t")
         end
@@ -58,6 +62,9 @@ class GenerateHathifile
       FileUtils.chmod(0o644, outfile)
     end
     fin.close
+    # As this job runs with a restrictive umask, allow group read/write on the output file.
+    Services[:logger].info "Setting group-rw permissions on #{outfile}"
+    FileUtils.chmod("g+rw", outfile)
   end
 
   def record_from_bib_record(rec)
@@ -92,4 +99,6 @@ class GenerateHathifile
   end
 end
 
+# Force logger to flush STDOUT on write so we can see what out Argo Workflows are doing.
+$stdout.sync = true
 GenerateHathifile.new.run if __FILE__ == $PROGRAM_NAME

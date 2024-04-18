@@ -8,3 +8,5 @@ database:
 hathifiles_web_path: <%= ENV['HATHIFILES_WEB_PATH'] %>
 zephir_dir: <%= ENV['ZEPHIR_DIR'] %>
 hathifiles_dir: <%= ENV['HATHIFILES_DIR'] %>
+history_files_dir: <%= ENV['HISTORY_FILES_DIR'] %>
+redirects_dir: <%= ENV['REDIRECTS_DIR'] %>

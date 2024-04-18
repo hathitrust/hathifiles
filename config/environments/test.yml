@@ -2,3 +2,5 @@
 hathifiles_web_path: /usr/src/app/tmp_web_hathifiles/
 zephir_dir: /usr/src/app/tmp_zephir_dir/
 hathifiles_dir: /usr/src/app/tmp_hathifiles_archive/
+history_files_dir: /usr/src/app/history_files/
+redirects_dir: /usr/src/app/redirects/

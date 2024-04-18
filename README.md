@@ -71,7 +71,7 @@ replaced by.
 ## Basic usage: add_monthly_and_dump_redirects.rb
 
 ```shell
-bundle exec ruby bin/add_monthly_and_dump_redirect.rb \
+bundle exec ruby bin/add_monthly_and_dump_redirects.rb \
 ../archive/hathi_full_20211101.txt.gz
 ```
 

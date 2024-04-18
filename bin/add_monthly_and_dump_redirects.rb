@@ -4,14 +4,17 @@ require 'pathname'
 here = Pathname.new(__dir__)
 libdir = here.parent + 'lib'
 $LOAD_PATH.unshift libdir
-root = here.parent
+
 require 'date'
 require 'date_named_file'
 require 'logger'
 require 'hathifile_history/records'
 
+require "settings"
+require "services"
+
 STDOUT.sync = true
-LOGGER      = Logger.new(STDOUT)
+LOGGER      = Services[:logger]
 
 def usage
   $stderr.puts %Q{
@@ -46,7 +49,7 @@ if hathifile == '-h'
 end
 
 if hathifile.nil?
-  hathifile = DateNamedFile.new('hathi_full_%Y%m%d.txt.gz').in_dir('../archive').last.to_s
+  hathifile = DateNamedFile.new('hathi_full_%Y%m%d.txt.gz').in_dir(Settings.hathifiles_dir).last.to_s
   LOGGER.info "No input file given. Using #{hathifile}"  
 end
 
@@ -57,9 +60,9 @@ mm          = yyyymm.to_s[4..5]
 last_month  = DateTime.parse("#{yyyy}-#{mm}-01").prev_month
 last_yyyymm = last_month.strftime '%Y%m'
 
-old_history_file ||= root + "history_files" + "#{last_yyyymm}.ndj.gz"
-new_history_file ||= root + "history_files" + "#{yyyymm}.ndj.gz"
-redirects_file   ||= root + "redirects" + "redirects_#{yyyymm}.txt.gz"
+old_history_file ||= File.join(Settings.history_files_dir, "#{last_yyyymm}.ndj.gz")
+new_history_file ||= File.join(Settings.history_files_dir, "#{yyyymm}.ndj.gz")
+redirects_file   ||= File.join(Settings.redirects_dir, "redirects_#{yyyymm}.txt.gz")
 
 unless File.exist?(old_history_file)
   LOGGER.error "Can't find #{old_history_file} for loading historical data. Aborting."
