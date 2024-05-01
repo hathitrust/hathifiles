@@ -7,8 +7,8 @@ GIT
 
 GIT
   remote: https://github.com/hathitrust/hathifiles_database.git
-  revision: a56b4177f7988dbbb0d5f7311c73cd7ff01b681f
-  branch: main
+  revision: 58b206c36c51135c441ca75878105b9496b7b801
+  branch: DEV-1087_argo_daily
   specs:
     hathifiles_database (0.1.0)
       date_named_file
