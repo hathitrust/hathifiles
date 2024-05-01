@@ -94,5 +94,19 @@ RSpec.describe HathifileListing do
       expect(metrics).to match(/^job_last_success\S*job="update_hathifile_listing"\S* \S+/m)
         .and match(/^job_records_processed\S*job="update_hathifile_listing"\S* [^0]\d*$/m)
     end
+
+    it "removes existing files that are too old" do
+      # Make some files that are about half a year old
+      old_files = []
+      5.times do |i|
+        old_file = File.join(@tmp_web_dir, "/hathi_upd_#{(Date.today - (180 + i)).strftime("%Y%m%d")}.txt.gz")
+        FileUtils.touch(old_file)
+        old_files << old_file
+      end
+      hflist.run
+      old_files.each do |old_file|
+        expect(File.exist?(old_file)).to eq(false)
+      end
+    end
   end
 end
