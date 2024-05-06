@@ -55,7 +55,7 @@ class GenerateHathifile
       Services[:logger].info "Moving tempfile #{gzfile} -> #{outfile}"
       FileUtils.mv(gzfile, outfile)
       Services[:logger].info "Setting 0644 permissions on #{outfile}"
-      FileUtils.chmod(0644, outfile)
+      FileUtils.chmod(0o644, outfile)
     end
     fin.close
   end
