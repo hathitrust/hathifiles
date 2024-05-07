@@ -34,6 +34,7 @@ RSpec.describe GenerateHathifile do
       # The items as they were output on that day
       expected = File.read("#{__dir__}/../data/000018677-20220808.tsv")
       expect(generated).to eq(expected)
+      expect(File.stat(outfile).mode.to_s(8)[-3, 3]).to eq("644")
     end
 
     it "generates the expected output from gzipped file" do
@@ -76,6 +77,7 @@ RSpec.describe GenerateHathifile do
       # The items as they were output on that day
       expected = File.read("#{__dir__}/../data/000018677-20220808-upd.tsv")
       expect(generated).to eq(expected)
+      expect(File.stat(outfile).mode.to_s(8)[-3, 3]).to eq("644")
     end
 
     it "generates the expected output from gzipped file" do
