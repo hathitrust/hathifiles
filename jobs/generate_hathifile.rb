@@ -62,9 +62,6 @@ class GenerateHathifile
       FileUtils.chmod(0o644, outfile)
     end
     fin.close
-    # As this job runs with a restrictive umask, allow group read/write on the output file.
-    Services[:logger].info "Setting group-rw permissions on #{outfile}"
-    FileUtils.chmod("g+rw", outfile)
   end
 
   def record_from_bib_record(rec)
