@@ -40,8 +40,12 @@ class GenerateHathifile
     outfile = File.join(Settings.hathifiles_dir, zephir_file.hathifile)
     Services[:logger].info "Outfile: #{outfile}"
 
-    Tempfile.create do |fout|
-      fin.each do |line|
+    Tempfile.create("hathifiles") do |fout|
+      Services[:logger].info "writing to tempfile #{fout.path}"
+      fin.each_with_index do |line, i|
+        if i % 100_000 == 0
+          Services[:logger].info "writing line #{i}"
+        end
         BibRecord.new(line).hathifile_records.each do |rec|
           fout.puts record_from_bib_record(rec).join("\t")
         end
@@ -92,4 +96,6 @@ class GenerateHathifile
   end
 end
 
+# Force logger to flush STDOUT on write so we can see what out Argo Workflows are doing.
+$stdout.sync = true
 GenerateHathifile.new.run if __FILE__ == $PROGRAM_NAME
