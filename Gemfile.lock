@@ -74,6 +74,7 @@ GEM
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (3.0.2)
+    fast_jsonparser (0.6.0)
     ffi (1.16.3)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
@@ -238,6 +239,7 @@ DEPENDENCIES
   ettin
   factory_bot
   faraday
+  fast_jsonparser
   filter!
   hathifiles_database!
   httpclient

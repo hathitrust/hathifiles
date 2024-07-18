@@ -22,10 +22,6 @@ RSpec.describe ItemRecord do
       expect(ir.access).to eq("allow")
     end
 
-    it "retrives the rights code" do
-      expect(ir.rights).to eq("pd")
-    end
-
     it "extracts the description" do
       expect(ir.description).to eq("v.1")
     end
@@ -43,11 +39,6 @@ RSpec.describe ItemRecord do
 
     it "extracts the rights_reason_code" do
       expect(ir.rights_reason_code).to eq("bib")
-    end
-
-    it "extracts the rights_timestamp" do
-      ir.htid = "test.pd_google"
-      expect(ir.rights_timestamp).to eq(DateTime.parse("2009-01-01 05:00:00").to_time)
     end
 
     it "extracts the update date from 974d" do
@@ -77,16 +68,6 @@ RSpec.describe ItemRecord do
     it "extracts the digitization_agent_code" do
       expect(ir.digitization_agent_code).to eq("google")
     end
-  end
-
-  it "retrieves the access_profile_code" do
-    ir.htid = "test.pd_google"
-    expect(ir.access_profile_code).to eq(2)
-  end
-
-  it "retrieves the access_profile" do
-    ir.htid = "test.pd_google"
-    expect(ir.access_profile).to eq("google")
   end
 
   describe "#rights_date_used" do

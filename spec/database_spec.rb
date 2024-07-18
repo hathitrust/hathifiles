@@ -2,13 +2,13 @@
 
 require "spec_helper"
 
-require "collections_database/collections"
+require "database"
 
-RSpec.describe CollectionsDatabase::CollectionsDB do
-  let(:connection_string) { "mysql2://ht_collections:ht_collections@mariadb/ht_collections" }
-  let(:user) { "ht_collections" }
-  let(:password) { "ht_collections" }
-  let(:database) { "ht_collections" }
+RSpec.describe Database do
+  let(:connection_string) { "mysql2://ht_rights:ht_rights@mariadb/ht_rights" }
+  let(:user) { "ht_rights" }
+  let(:password) { "ht_rights" }
+  let(:database) { "ht_rights" }
   let(:host) { "mariadb" }
   let(:connection) do
     described_class.new(user: user,

@@ -36,7 +36,7 @@ module CollectionsDatabase
     end
 
     def load_from_db
-      Services.collections_db[:ht_collections]
+      Services.db[:ht_collections]
         .select(:collection,
           :content_provider_cluster,
           :responsible_entity,
@@ -50,7 +50,8 @@ module CollectionsDatabase
       if @collections.key?(collection)
         @collections[collection]
       else
-        raise KeyError, "No collection data for collection:#{collection}"
+        nil
+        # raise KeyError, "No collection data for collection:#{collection}"
       end
     end
 

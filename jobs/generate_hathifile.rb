@@ -6,13 +6,15 @@ require "date"
 require "settings"
 require "services"
 require "push_metrics"
+require "sequel"
 require "zephir_files"
 
 class GenerateHathifile
   attr_reader :tracker
 
   def initialize
-    @tracker = PushMetrics.new(batch_size: 10_000, job_name: "generate_hathifiles")
+    @tracker = PushMetrics.new(batch_size: 10_000, job_name: "generate_hathifiles",
+      logger: Services["logger"])
   end
 
   def run
@@ -42,14 +44,24 @@ class GenerateHathifile
 
     Tempfile.create("hathifiles") do |fout|
       Services[:logger].info "writing to tempfile #{fout.path}"
-      fin.each_with_index do |line, i|
-        if i % 100_000 == 0
-          Services[:logger].info "writing line #{i}"
+      fin.each_slice(1000) do |lines|
+        recs = []
+        lines.each do |line|
+          recs += BibRecord.new(line).hathifile_records.to_a
         end
-        BibRecord.new(line).hathifile_records.each do |rec|
+        htids = recs.map { |rec| rec[:htid] }
+        htids_to_rights = batch_extract_rights(htids)
+        last_bib_key = nil
+        recs.each do |rec|
+          rights = htids_to_rights[rec[:htid]] || {}
+          rec[:rights_timestamp] = rights[:rights_timestamp]
+          rec[:access_profile] = rights[:access_profile]
           fout.puts record_from_bib_record(rec).join("\t")
+          if last_bib_key != rec[:ht_bib_key]
+            tracker.increment_and_log_batch_line
+            last_bib_key = rec[:ht_bib_key]
+          end
         end
-        tracker.increment_and_log_batch_line
       end
       fout.flush
       Services[:logger].info "Gzipping: #{fout.path}"
@@ -93,6 +105,49 @@ class GenerateHathifile
       (rec[:access_profile] || ""),
       (rec[:author].join(", ") || "")
     ]
+  end
+
+  # Map htid -> rights for this batch
+  def batch_extract_rights(htids)
+    htids_to_rights = {}
+    Services.db[:rights_current]
+      .join(:access_profiles, id: Sequel[:rights_current][:access_profile])
+      .select(
+        Sequel.as(qualified_rights_current_htid, :htid),
+        Sequel.as(qualified_rights_current_time, :rights_timestamp),
+        Sequel.as(Sequel.qualify(:access_profiles, :name), :access_profile)
+      )
+      .where(qualified_rights_current_htid => htids)
+      .each do |record|
+      htids_to_rights[record[:htid]] = {
+        rights_timestamp: record[:rights_timestamp],
+        access_profile: record[:access_profile]
+      }
+    end
+    htids_to_rights
+  end
+
+  private
+
+  def qualified_rights_current_namespace
+    @qualified_rights_current_namespace ||= Sequel.qualify(:rights_current, :namespace)
+  end
+
+  def qualified_rights_current_id
+    @qualified_rights_current_id ||= Sequel.qualify(:rights_current, :id)
+  end
+
+  def qualified_rights_current_htid
+    @qualified_rights_current_htid = Sequel.function(
+      :concat,
+      qualified_rights_current_namespace,
+      ".",
+      qualified_rights_current_id
+    )
+  end
+
+  def qualified_rights_current_time
+    @qualified_rights_current_time ||= Sequel.qualify(:rights_current, :time)
   end
 end
 

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require_relative "bib_record"
-require_relative "collections_database/collections_db"
 require_relative "collections_database/collections"
+require_relative "database"
 require_relative "hathifile_history/records"
 require_relative "hathifile_history/record"
 require_relative "hathifile_history/htid_history_entry"
