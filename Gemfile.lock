@@ -169,7 +169,7 @@ GEM
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     scrub_rb (1.0.1)
-    sequel (5.75.0)
+    sequel (5.82.0)
       bigdecimal
     simplecov (0.22.0)
       docile (~> 1.1)
@@ -257,4 +257,4 @@ DEPENDENCIES
   zinzout
 
 BUNDLED WITH
-   2.4.22
+   2.5.15
