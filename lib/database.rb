@@ -6,6 +6,7 @@ Dotenv.load(".env")
 require "delegate"
 require "mysql2"
 require "sequel"
+require "settings"
 
 # Backend for connection to MySQL database for production information about
 # rights
@@ -13,7 +14,7 @@ class Database < SimpleDelegator
   attr_reader :rawdb
   attr_accessor :connection_string
 
-  def initialize(connection_string = ENV["DB_CONNECTION_STRING"], **)
+  def initialize(connection_string = Settings.database.url, **)
     @rawdb = self.class.connection(connection_string, **)
     super(@rawdb)
   end
@@ -32,8 +33,7 @@ class Database < SimpleDelegator
   #   port: DB_PORT
   #   database: DB_DATABASE
   #   adapter: DB_ADAPTER
-  def self.connection(connection_string = ENV["DB_CONNECTION_STRING"],
-    **kwargs)
+  def self.connection(connection_string = Settings.database.url, **kwargs)
 
     if connection_string.nil?
       db_args = gather_db_args(kwargs).merge(
