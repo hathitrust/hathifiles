@@ -3,6 +3,13 @@
 
 $LOAD_PATH.unshift File.expand_path(Pathname.new("#{File.dirname(__FILE__)}/../lib"))
 
+require "push_metrics"
+
+require "hathifile_writer"
+require "services"
+require "settings"
+require "zephir_files"
+
 class GenerateHathifile
   attr_reader :tracker
 
