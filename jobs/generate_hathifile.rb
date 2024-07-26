@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+$LOAD_PATH.unshift File.expand_path(Pathname.new("#{File.dirname(__FILE__)}/../lib"))
+
 require "bib_record"
 require "date"
 require "settings"
@@ -12,9 +14,14 @@ require "zephir_files"
 class GenerateHathifile
   attr_reader :tracker
 
+  # Number of lines/cids to process in each outer loop;
+  # we end up doing a rights query for all HTIDs under these lines
+  SLICE_SIZE = 20
+
   def initialize
-    @tracker = PushMetrics.new(batch_size: 10_000, job_name: "generate_hathifiles",
+    @tracker = PushMetrics.new(batch_size: 5_000, job_name: "generate_hathifiles",
       logger: Services["logger"])
+    @access_profiles = Services.db[:access_profiles].as_hash(:id)
   end
 
   def run
@@ -44,7 +51,7 @@ class GenerateHathifile
 
     Tempfile.create("hathifiles") do |fout|
       Services[:logger].info "writing to tempfile #{fout.path}"
-      fin.each_slice(1000) do |lines|
+      fin.each_slice(SLICE_SIZE) do |lines|
         recs = []
         lines.each do |line|
           recs += BibRecord.new(line).hathifile_records.to_a
@@ -110,47 +117,23 @@ class GenerateHathifile
   # Map htid -> rights for this batch
   def batch_extract_rights(htids)
     htids_to_rights = {}
+    split_htids = htids.map { |htid| htid.split(".", 2) }
     Services.db[:rights_current]
-      .join(:access_profiles, id: Sequel[:rights_current][:access_profile])
-      .select(
-        Sequel.as(qualified_rights_current_htid, :htid),
-        Sequel.as(qualified_rights_current_time, :rights_timestamp),
-        Sequel.as(Sequel.qualify(:access_profiles, :name), :access_profile)
-      )
-      .where(qualified_rights_current_htid => htids)
+      .select(:namespace, :id, :time, :access_profile)
+      .where([:namespace, :id] => split_htids)
       .each do |record|
-      htids_to_rights[record[:htid]] = {
-        rights_timestamp: record[:rights_timestamp],
-        access_profile: record[:access_profile]
+      htid = record[:namespace] + "." + record[:id]
+      htids_to_rights[htid] = {
+        rights_timestamp: record[:time],
+        access_profile: @access_profiles[record[:access_profile]][:name]
       }
     end
     htids_to_rights
-  end
-
-  private
-
-  def qualified_rights_current_namespace
-    @qualified_rights_current_namespace ||= Sequel.qualify(:rights_current, :namespace)
-  end
-
-  def qualified_rights_current_id
-    @qualified_rights_current_id ||= Sequel.qualify(:rights_current, :id)
-  end
-
-  def qualified_rights_current_htid
-    @qualified_rights_current_htid = Sequel.function(
-      :concat,
-      qualified_rights_current_namespace,
-      ".",
-      qualified_rights_current_id
-    )
-  end
-
-  def qualified_rights_current_time
-    @qualified_rights_current_time ||= Sequel.qualify(:rights_current, :time)
   end
 end
 
 # Force logger to flush STDOUT on write so we can see what out Argo Workflows are doing.
 $stdout.sync = true
-GenerateHathifile.new.run if __FILE__ == $PROGRAM_NAME
+if __FILE__ == $PROGRAM_NAME
+  GenerateHathifile.new.run
+end
