@@ -110,7 +110,7 @@ RSpec.describe GenerateHathifile do
 
   describe "#batch_extract_rights" do
     it "extracts rights_timestamp and access_profile" do
-      rights = GenerateHathifile.new.batch_extract_rights("test.pd_google")
+      rights = GenerateHathifile.new.batch_extract_rights(["test.pd_google"])
       expect(rights).to be_a(Hash)
       expect(rights["test.pd_google"]).not_to be_nil
       expect(rights["test.pd_google"][:rights_timestamp]).to be_a(Time)
