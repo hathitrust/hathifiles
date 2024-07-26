@@ -34,7 +34,6 @@ class Database < SimpleDelegator
   #   database: DB_DATABASE
   #   adapter: DB_ADAPTER
   def self.connection(connection_string = Settings.database.url, **kwargs)
-
     if connection_string.nil?
       db_args = gather_db_args(kwargs).merge(
         config_local_infile: true

@@ -107,7 +107,7 @@ RSpec.describe GenerateHathifile do
         .and match(/^job_records_processed\S*job="generate_hathifiles"\S* 1$/m)
     end
   end
-  
+
   describe "#batch_extract_rights" do
     it "extracts rights_timestamp and access_profile" do
       rights = GenerateHathifile.new.batch_extract_rights("test.pd_google")
