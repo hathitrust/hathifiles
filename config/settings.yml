@@ -1,2 +1,2 @@
 database:
-  url: <%= ENV["MYSQL_CONNECTION_STRING"] %>
+  url: <%= ENV["DB_CONNECTION_STRING"] %>
