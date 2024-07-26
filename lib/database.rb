@@ -20,7 +20,7 @@ class Database < SimpleDelegator
   end
 
   # #connection will take
-  #  * a full connection string (passed here OR in the environment
+  #  * a full connection string (passed here OR in Settings which is generally the environment
   #    variable MYSQL_CONNECTION_STRING)
   #  * a set of named arguments, drawn from those passed in and the
   #    environment. Arguments are those supported by Sequel.
