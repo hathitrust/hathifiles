@@ -8,7 +8,7 @@ require "settings"
 
 class HathifileWriter
   attr_reader :hathifile, :tempfile, :queue
-  QUEUE_LIMIT = 100
+  QUEUE_LIMIT = 10_000
 
   def initialize(hathifile:)
     @hathifile = hathifile
