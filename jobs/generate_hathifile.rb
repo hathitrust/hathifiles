@@ -14,7 +14,7 @@ class GenerateHathifile
   attr_reader :tracker
 
   def initialize
-    @tracker = PushMetrics.new(batch_size: 5_000, job_name: "generate_hathifiles",
+    @tracker = PushMetrics.new(batch_size: 10_000, job_name: "generate_hathifiles",
       logger: Services["logger"])
   end
 
