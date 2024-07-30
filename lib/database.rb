@@ -55,7 +55,7 @@ class Database < SimpleDelegator
 
       args[:host] ||= "localhost"
       args[:adapter] ||= :mysql2
-      args[:database] ||= "ht_rights"
+      args[:database] ||= "ht"
       args
     end
   end
