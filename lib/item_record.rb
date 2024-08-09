@@ -59,10 +59,6 @@ class ItemRecord
     @update_date ||= marc["d"]
   end
 
-  def rights_timestamp
-    @rights_timestamp ||= rights_from_db.time
-  end
-
   def rights_determination_note
     @rights_determination_note ||= marc["t"]
   end
@@ -77,25 +73,16 @@ class ItemRecord
   end
 
   def responsible_entity_code
-    @responsible_entity_code ||= Services.collections[collection_code].responsible_entity
+    @responsible_entity_code ||= Services.collections[collection_code]&.responsible_entity
   end
 
   def digitization_agent_code
     @digitization_agent_code ||= marc["s"]
   end
 
-  # From the rights database
+  # From the database
   def content_provider_code
     @content_provider_code ||= Services.collections[collection_code]&.content_provider_cluster || collection_code
-  end
-
-  # From the rights database
-  def access_profile_code
-    rights_from_db.access_profile
-  end
-
-  def access_profile
-    Services.access_profiles[access_profile_code]&.name || access_profile_code
   end
 
   def to_h
@@ -106,20 +93,14 @@ class ItemRecord
      source: source,
      source_bib_num: source_bib_num,
      rights_reason_code: rights_reason_code,
-     rights_timestamp: rights_timestamp,
      rights_date_used: rights_date_used,
      collection_code: collection_code,
      content_provider_code: content_provider_code,
      responsible_entity_code: responsible_entity_code,
      digitization_agent_code: digitization_agent_code,
-     access_profile_code: access_profile_code,
-     access_profile: access_profile,
-     update_date: update_date}
-  end
-
-  private
-
-  def rights_from_db
-    @rights_from_db ||= Services.rights.new(item_id: htid)
+     update_date: update_date,
+     # rights_timestamp and access_profile must be filled in the caller
+     rights_timestamp: nil,
+     access_profile: nil}
   end
 end

@@ -3,6 +3,7 @@
 require "marc"
 require "traject"
 require "traject/macros/marc21_semantics"
+require "fast_jsonparser"
 require "json"
 require "place_of_publication"
 require "us_fed_doc"
@@ -39,7 +40,7 @@ class BibRecord
   end
 
   def initialize(marc_in_json)
-    @marc = MARC::Record.new_from_hash(JSON.parse(marc_in_json))
+    @marc = MARC::Record.new_from_hash FastJsonparser.parse(marc_in_json, symbolize_keys: false)
   end
 
   def ht_bib_key
