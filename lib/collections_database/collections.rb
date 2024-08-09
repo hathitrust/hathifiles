@@ -50,8 +50,7 @@ module CollectionsDatabase
       if @collections.key?(collection)
         @collections[collection]
       else
-        nil
-        # raise KeyError, "No collection data for collection:#{collection}"
+        raise KeyError, "No collection data for collection:#{collection}"
       end
     end
 
