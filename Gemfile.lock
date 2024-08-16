@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/hathitrust/hathifiles_database.git
-  revision: 233b8678c95ce81c8cb41d915601f3ae57df28f5
+  revision: 9c04f62e702187e2447c7ea645147f06c16d4651
   branch: DEV-1083_mysql_dump_fixes
   specs:
     hathifiles_database (0.2.2)
