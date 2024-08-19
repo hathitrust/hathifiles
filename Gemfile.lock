@@ -7,10 +7,10 @@ GIT
 
 GIT
   remote: https://github.com/hathitrust/hathifiles_database.git
-  revision: 9c04f62e702187e2447c7ea645147f06c16d4651
-  branch: DEV-1083_mysql_dump_fixes
+  revision: 66cb21e0e31c7f491ce2669f70fee79b79db3def
+  branch: main
   specs:
-    hathifiles_database (0.2.2)
+    hathifiles_database (0.3.0)
       date_named_file
       dotenv
       ettin
