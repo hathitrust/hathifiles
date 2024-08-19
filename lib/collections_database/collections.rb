@@ -36,7 +36,7 @@ module CollectionsDatabase
     end
 
     def load_from_db
-      Services.collections_db[:ht_collections]
+      Services.db[:ht_collections]
         .select(:collection,
           :content_provider_cluster,
           :responsible_entity,
