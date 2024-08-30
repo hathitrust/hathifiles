@@ -19,7 +19,7 @@ gem "zinzout"
 
 gem "push_metrics", git: "https://github.com/hathitrust/push_metrics.git", tag: "v0.9.1"
 gem "filter", git: "https://github.com/hathitrust/feddocs_filter.git", branch: "main"
-gem "hathifiles_database", git: "https://github.com/hathitrust/hathifiles_database.git", branch: "main"
+gem "hathifiles_database", git: "https://github.com/hathitrust/hathifiles_database.git", branch: "DEV-1335_date_independence"
 
 group :development, :test do
   gem "factory_bot"
