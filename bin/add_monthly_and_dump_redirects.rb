@@ -70,8 +70,8 @@ unless File.exist?(old_history_file)
 end
 
 if File.exist?(new_history_file)
-  LOGGER.error "#{new_history_file} already exists. Rename/delete it first"
-  exit 1
+  LOGGER.warn "#{new_history_file} already exists, bailing out"
+  exit 0
 end
 
 LOGGER.info "Will read from #{old_history_file}"
