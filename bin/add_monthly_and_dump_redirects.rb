@@ -69,9 +69,10 @@ unless File.exist?(old_history_file)
   exit 1
 end
 
+# Argo daily workflow calls this each day, it is not an error to have already done the work.
 if File.exist?(new_history_file)
-  LOGGER.error "#{new_history_file} already exists. Rename/delete it first"
-  exit 1
+  LOGGER.info "#{new_history_file} already exists. Exiting."
+  exit 0
 end
 
 LOGGER.info "Will read from #{old_history_file}"
