@@ -96,7 +96,7 @@ class BibRecord
   end
 
   def lang
-    @lang ||= (Traject::MarcExtractor.cached("008[35-37]").extract(marc).first || "   ")
+    @lang ||= Traject::MarcExtractor.cached("008[35-37]").extract(marc).first || "   "
   end
 
   def author
