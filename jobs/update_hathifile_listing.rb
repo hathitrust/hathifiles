@@ -11,8 +11,8 @@ class HathifileListing
   attr_accessor :url_base, :file_list, :cutoff, :hathifile_dir, :hathifile_web_dir, :hathifile_listing, :days_retro
 
   def initialize(hathifile_dir = nil, hathifile_web_dir = nil, days_retro = 70)
-    @hathifile_dir = (hathifile_dir || Settings.hathifiles_dir)
-    @hathifile_web_dir = (hathifile_web_dir || Settings.hathifiles_web_path)
+    @hathifile_dir = hathifile_dir || Settings.hathifiles_dir
+    @hathifile_web_dir = hathifile_web_dir || Settings.hathifiles_web_path
     @hathifile_listing = @hathifile_web_dir + "hathi_file_list.json"
     @days_retro = days_retro
   end

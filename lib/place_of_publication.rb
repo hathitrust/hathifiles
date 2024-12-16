@@ -14,7 +14,7 @@ class PlaceOfPublication
   end
 
   def raw_pub_place
-    @raw_pub_place ||= (marc["008"]&.value&.slice(15..17)&.downcase || "")
+    @raw_pub_place ||= marc["008"]&.value&.slice(15..17)&.downcase || ""
   end
 
   # Cleans up the raw_pub_place

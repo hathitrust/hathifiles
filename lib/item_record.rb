@@ -30,12 +30,12 @@ class ItemRecord
 
   # Enumeration / chronology from the 974z
   def description
-    @description ||= (marc["z"] || "")
+    @description ||= marc["z"] || ""
   end
 
   # In theory, it is the "Code identifying the source of the bibliographic record..."
   def source
-    @source ||= (marc["b"] || "")
+    @source ||= marc["b"] || ""
   end
 
   # In theory, it is "the Local bibliographic record number used in the catalog
@@ -65,7 +65,7 @@ class ItemRecord
 
   def rights_date_used
     # Have to use bib rights to match current data but that's not worth it
-    @rights_date_used ||= (marc["y"] || "9999")
+    @rights_date_used ||= marc["y"] || "9999"
   end
 
   def collection_code

@@ -10,7 +10,9 @@ x-healthcheck-defaults: &healthcheck-defaults
 services:
 
   hf:
-    build: .
+    build:
+      context: .
+      target: base
     volumes:
       - .:/usr/src/app
       - gem_cache:/gems
@@ -25,7 +27,7 @@ services:
     image: ghcr.io/hathitrust/db-image:latest
     restart: always
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: 1 
+      MYSQL_RANDOM_ROOT_PASSWORD: 1
       MYSQL_DATABASE: ht
       MYSQL_USER: ht_rights
       MYSQL_PASSWORD: ht_rights
