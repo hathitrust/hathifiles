@@ -17,7 +17,7 @@ gem "sequel"
 gem "traject"
 gem "zinzout"
 
-gem "push_metrics", git: "https://github.com/hathitrust/push_metrics.git", tag: "v0.9.1"
+gem "push_metrics", git: "https://github.com/hathitrust/push_metrics.git", branch: "main"
 gem "filter", git: "https://github.com/hathitrust/feddocs_filter.git", branch: "main"
 gem "hathifiles_database", git: "https://github.com/hathitrust/hathifiles_database.git", branch: "main"
 
