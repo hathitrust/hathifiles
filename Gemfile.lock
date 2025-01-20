@@ -246,7 +246,6 @@ DEPENDENCIES
   fast_jsonparser
   filter!
   hathifiles_database!
-  httpclient
   marc
   milemarker
   mysql2

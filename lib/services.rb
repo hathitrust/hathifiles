@@ -2,7 +2,6 @@
 
 require "canister"
 require "sequel"
-require "database"
 require "collections_database/collections"
 require "sdr_num_prefixes"
 require "logger"
@@ -10,7 +9,16 @@ require "logger"
 Services = Canister.new
 
 Services.register(:db) do
-  Database.new
+  # Read-only connection to database for verifying rights DB vs .rights files
+  # as well as hathifiles tables.
+  Sequel.connect(
+    adapter: "mysql2",
+    user: ENV["MARIADB_HT_RO_USERNAME"],
+    password: ENV["MARIADB_HT_RO_PASSWORD"],
+    host: ENV["MARIADB_HT_RO_HOST"],
+    database: ENV["MARIADB_HT_RO_DATABASE"],
+    encoding: "utf8mb4"
+  )
 end
 
 Services.register(:collections) do
