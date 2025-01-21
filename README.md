@@ -1,4 +1,4 @@
-[![Tests](https://github.com/hathitrust/hathifiles/actions/workflows/ci.yml/badge.svg)](https://github.com/hathitrust/hathifiles/actions/workflows/ci.yml)
+[![Test Status](https://github.com/hathitrust/hathifiles/actions/workflows/tests.yml/badge.svg)](https://github.com/hathitrust/hathifiles/actions/workflows/tests.yml)
 [![Coverage Status](https://coveralls.io/repos/github/hathitrust/hathifiles/badge.svg?branch=main)](https://coveralls.io/github/hathitrust/hathifiles?branch=main)
 [![Ruby Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/testdouble/standard)
 
