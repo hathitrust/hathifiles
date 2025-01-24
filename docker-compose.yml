@@ -20,7 +20,10 @@ services:
       mariadb: *healthy
       pushgateway: *healthy
     environment:
-      MYSQL_CONNECTION_STRING: "mysql2://ht_rights:ht_rights@mariadb/ht"
+      MARIADB_HT_RO_USERNAME: ht_rights
+      MARIADB_HT_RO_PASSWORD: ht_rights
+      MARIADB_HT_RO_HOST: mariadb
+      MARIADB_HT_RO_DATABASE: ht
       PUSHGATEWAY: http://pushgateway:9091
 
   mariadb:
