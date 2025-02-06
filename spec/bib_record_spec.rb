@@ -123,6 +123,8 @@ RSpec.describe BibRecord do
                                 "umdcmp" => ["990058493500106381"],
                                 "uuhhs" => ["990058493500106381"],
                                  "pur" => ["1295679"],
+                                 # we accidentally added a second collection code for purdue
+                                 "purd" => ["1295679"],
                                  # this is wrong, but hopefully doesn't matter
                                  "pu" => ["r1295679"]})
     end
