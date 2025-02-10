@@ -10,16 +10,31 @@ RSpec.describe GenerateHathifile do
     @old_hf_dir = Settings.hathifiles_dir
     @old_z_dir = Settings.zephir_dir
 
-    Dir.mktmpdir("hathifiles") do |hf_dir|
-      Settings.hathifiles_dir = hf_dir
-      Dir.mktmpdir("zephir") do |z_dir|
-        Settings.zephir_dir = z_dir
-        example.run
-      end
-    end
+    db = Services.db
+    db.transaction do
+      db.rollback_on_exit
 
-    Settings.hathifiles_dir = @old_hf_dir
-    Settings.zephir_dir = @old_z_dir
+      # rights for things in the fixture file below -- ic/bib, digitization by
+      # google, access profile google
+
+      timestamp = DateTime.parse("2024-01-01T00:00:00Z").to_time
+      db[:rights_current].import(
+        [:namespace, :id, :time, :attr, :reason, :source, :access_profile],
+        [["mdp", "39015027625402", timestamp, 2, 1, 1, 2],
+          ["mdp", "39015003746396", timestamp, 2, 1, 1, 2]]
+      )
+
+      Dir.mktmpdir("hathifiles") do |hf_dir|
+        Settings.hathifiles_dir = hf_dir
+        Dir.mktmpdir("zephir") do |z_dir|
+          Settings.zephir_dir = z_dir
+          example.run
+        end
+      end
+
+      Settings.hathifiles_dir = @old_hf_dir
+      Settings.zephir_dir = @old_z_dir
+    end
   end
 
   context "with a full file" do

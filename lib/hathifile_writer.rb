@@ -49,6 +49,9 @@ class HathifileWriter
         rights = htids_to_rights[rec[:htid]] || {}
         rec[:rights_timestamp] = rights[:rights_timestamp]
         rec[:access_profile] = rights[:access_profile]
+        if !rec[:rights_timestamp] || !rec[:access_profile]
+          raise "Couldn't find rights for #{rec[:htid]}"
+        end
         tempfile.puts record_from_bib_record(rec).join("\t")
       end
       @queue.clear
