@@ -7,4 +7,5 @@ spec/data/zephir_full_20220228_vufind.json
 coverage/
 *.tsv
 *.txt
-
+.*.sw?
+*~

@@ -13,4 +13,14 @@ RSpec.describe HathifileWriter do
       expect(rights["test.pd_google"][:access_profile]).to be_a(String)
     end
   end
+
+  describe "#export_queue" do
+    it "bails out if rights_timestamp is missing for an item" do
+      writer = described_class.new(hathifile: "no_such_file")
+      writer.add([{htid: "test.nonexistent"}])
+      expect do
+        writer.export_queue(force: true)
+      end.to raise_exception(RuntimeError)
+    end
+  end
 end
