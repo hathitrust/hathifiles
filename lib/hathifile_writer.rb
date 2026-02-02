@@ -97,11 +97,11 @@ class HathifileWriter
       .select(:namespace, :id, :time, :access_profile)
       .where([:namespace, :id] => split_htids)
       .each do |record|
-      htid = record[:namespace] + "." + record[:id]
-      htids_to_rights[htid] = {
-        rights_timestamp: record[:time],
-        access_profile: @access_profiles[record[:access_profile]][:name]
-      }
+        htid = record[:namespace] + "." + record[:id]
+        htids_to_rights[htid] = {
+          rights_timestamp: record[:time],
+          access_profile: @access_profiles[record[:access_profile]][:name]
+        }
     end
     htids_to_rights
   end
