@@ -7,13 +7,10 @@ require "services"
 require "settings"
 
 class HathifileWriter
-  attr_reader :hathifile, :tempfile, :queue
+  attr_reader :tempfile, :queue
   QUEUE_LIMIT = 10_000
 
-  def initialize(hathifile:)
-    @hathifile = hathifile
-    @tempfile = Tempfile.create("hathifiles")
-    Services[:logger].info "writing to tempfile #{tempfile.path}"
+  def initialize()
     @queue = []
     @access_profiles = Services.db[:access_profiles].as_hash(:id)
   end
@@ -27,32 +24,16 @@ class HathifileWriter
 
   def finish
     export_queue(force: true)
-    tempfile.close
-    Services[:logger].info "Gzipping: #{tempfile.path}"
-    system("gzip #{tempfile.path}")
-    gzfile = tempfile.path + ".gz"
-    # Move tempfile into place
-    outfile = File.join(Settings.hathifiles_dir, hathifile)
-    Services[:logger].info "Moving tempfile #{gzfile} -> #{outfile}"
-    FileUtils.mv(gzfile, outfile)
-    Services[:logger].info "Setting 0644 permissions on #{outfile}"
-    FileUtils.chmod(0o644, outfile)
   end
 
   # Convert all of the records in the queue to tab-delimited entries,
   # fill in the rights information, and export to file.
   def export_queue(force: false)
     if @queue.size >= QUEUE_LIMIT || force
+      binding.irb
       htids = @queue.map { |rec| rec[:htid] }
-      htids_to_rights = batch_extract_rights(htids)
       @queue.each do |rec|
-        rights = htids_to_rights[rec[:htid]] || {}
-        rec[:rights_timestamp] = rights[:rights_timestamp]
-        rec[:access_profile] = rights[:access_profile]
-        if !rec[:rights_timestamp] || !rec[:access_profile]
-          raise "Couldn't find rights for #{rec[:htid]}"
-        end
-        tempfile.puts record_from_bib_record(rec).join("\t")
+        STDOUT.puts record_from_bib_record(rec).join("\t")
       end
       @queue.clear
     end
@@ -60,32 +41,12 @@ class HathifileWriter
 
   def record_from_bib_record(rec)
     [
-      rec[:htid],
-      rec[:access],
-      rec[:rights],
       rec[:ht_bib_key],
-      rec[:description],
-      rec[:source] || "",
-      rec[:source_bib_num].join(",") || "",
-      rec[:oclc_num].join(","),
-      rec[:isbn].join(","),
-      rec[:issn].join(","),
-      rec[:lccn].join(","),
-      rec[:title].join(","),
-      rec[:imprint].join(", "),
-      rec[:rights_reason_code] || "",
-      rec[:rights_timestamp]&.strftime("%Y-%m-%d %H:%M:%S") || "",
       rec[:us_gov_doc_flag],
-      rec[:rights_date_used],
       rec[:pub_place],
       rec[:lang],
       rec[:bib_fmt],
-      rec[:collection_code] || "",
-      rec[:content_provider_code] || "",
-      rec[:responsible_entity_code] || "",
-      rec[:digitization_agent_code] || "",
-      rec[:access_profile] || "",
-      rec[:author].join(", ") || ""
+      rec[:publish_date]
     ]
   end
 

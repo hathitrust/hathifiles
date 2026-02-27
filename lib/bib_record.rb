@@ -8,6 +8,7 @@ require "json"
 require "place_of_publication"
 require "us_fed_doc"
 require "item_record"
+require_relative "../../hci/lib/ht_traject/ht_macros.rb"
 
 class BibRecord
   include USFedDoc
@@ -83,6 +84,10 @@ class BibRecord
     @imprint
   end
 
+  def publish_date
+    HathiTrust::Traject::Macros::HTMacros.get_date(marc)
+  end
+
   def u_and_f?
     /^.{17}u.{10}f/.match? marc["008"]&.value
   end
@@ -124,25 +129,18 @@ class BibRecord
 
   def hathifile_records
     return enum_for(:hathifile_records) unless block_given?
-    item_records.each do |ir|
-      # merge bib and item level fields
-      yield to_h.merge(ir.to_h)
-    end
+    yield to_h
   end
 
   def to_h
-    {oclc_num: oclc_num,
-     isbn: isbn,
-     issn: issn,
-     lccn: lccn,
-     title: title,
-     imprint: imprint,
-     ht_bib_key: ht_bib_key,
-     pub_place: pub_place.to_s,
-     lang: lang,
-     bib_fmt: bib_fmt,
-     us_gov_doc_flag: us_gov_doc_flag,
-     author: author}
+    {
+      ht_bib_key: ht_bib_key,
+      pub_place: pub_place.to_s,
+      lang: lang,
+      bib_fmt: bib_fmt,
+      us_gov_doc_flag: us_gov_doc_flag,
+      publish_date: publish_date,
+    }
   end
 
   # Item records need a map of collection code to bib record id assembled from

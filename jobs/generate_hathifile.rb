@@ -31,15 +31,14 @@ class GenerateHathifile
     tracker.log_final_line
   end
 
-  def run_file(zephir_file)
-    infile = File.join(Settings.zephir_dir, zephir_file.filename)
+  def run_file(infile)
     Services[:logger].info "Processing file: #{infile}"
     fin = if /\.gz$/.match?(infile)
       Zlib::GzipReader.open(infile)
     else
       File.open(infile)
     end
-    writer = HathifileWriter.new(hathifile: zephir_file.hathifile)
+    writer = HathifileWriter.new()
     fin.each do |line|
       records = BibRecord.new(line).hathifile_records.to_a
       writer.add records
@@ -52,4 +51,4 @@ end
 
 # Force logger to flush STDOUT on write so we can see what out Argo Workflows are doing.
 $stdout.sync = true
-GenerateHathifile.new.run if __FILE__ == $PROGRAM_NAME
+GenerateHathifile.new.run_file(ARGV[0]) if __FILE__ == $PROGRAM_NAME

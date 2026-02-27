@@ -15,6 +15,7 @@ services:
       target: base
     volumes:
       - .:/usr/src/app
+      - ../hathitrust_catalog_indexer:/usr/src/hci
       - gem_cache:/gems
     depends_on:
       mariadb: *healthy
