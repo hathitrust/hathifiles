@@ -20,20 +20,22 @@ services:
       mariadb: *healthy
       pushgateway: *healthy
     environment:
-      MARIADB_HT_RO_USERNAME: ht_rights
-      MARIADB_HT_RO_PASSWORD: ht_rights
+      MARIADB_HT_RO_USERNAME: hathifiles
+      MARIADB_HT_RO_PASSWORD: hathifiles
       MARIADB_HT_RO_HOST: mariadb
       MARIADB_HT_RO_DATABASE: ht
       PUSHGATEWAY: http://pushgateway:9091
 
   mariadb:
     image: ghcr.io/hathitrust/db-image:latest
+    volumes:
+      - ./config/pub_date.sql:/docker-entrypoint-initdb.d/999-pubdate.sql
     restart: always
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: 1
       MYSQL_DATABASE: ht
-      MYSQL_USER: ht_rights
-      MYSQL_PASSWORD: ht_rights
+      MYSQL_USER: hathifiles
+      MYSQL_PASSWORD: hathifiles
     healthcheck:
       <<: *healthcheck-defaults
       test: [ "CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized" ]

@@ -121,5 +121,16 @@ RSpec.describe GenerateHathifile do
       expect(metrics).to match(/^job_last_success\S*job="generate_hathifiles"\S* \S+/m)
         .and match(/^job_records_processed\S*job="generate_hathifiles"\S* 1$/m)
     end
+
+    it "updates pub dates" do
+      Services.db[:hf_pub_date].delete
+      # One particular UC record from a day in August 2022
+      system("cp #{__dir__}/../data/000018677-20220807.json #{Settings.zephir_dir}/zephir_upd_20220807.json")
+
+      GenerateHathifile.new.run
+
+      expect(Services.db[:hf_pub_date].where(bib_num: "000018677").first[:pub_date]).to eq(1966)
+
+    end
   end
 end

@@ -23,9 +23,9 @@ gem "hathifiles_database", git: "https://github.com/hathitrust/hathifiles_databa
 group :development, :test do
   gem "factory_bot"
   gem "faraday"
-  gem "pry"
   gem "rspec"
   gem "simplecov"
   gem "simplecov-lcov"
   gem "standardrb"
+  gem "debug"
 end

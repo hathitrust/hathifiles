@@ -9,6 +9,7 @@ require "hathifile_writer"
 require "services"
 require "settings"
 require "zephir_files"
+require "pub_date_updater"
 
 class GenerateHathifile
   attr_reader :tracker
@@ -40,9 +41,12 @@ class GenerateHathifile
       File.open(infile)
     end
     writer = HathifileWriter.new(hathifile: zephir_file.hathifile)
+    pub_dates = PubDateUpdater.new
     fin.each do |line|
-      records = BibRecord.new(line).hathifile_records.to_a
-      writer.add records
+      bib_record = BibRecord.new(line)
+      pub_dates.update(bib_record)
+      hathifile_records = bib_record.hathifile_records.to_a
+      writer.add hathifile_records
       tracker.increment_and_log_batch_line
     end
     writer.finish

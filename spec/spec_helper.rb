@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "factory_bot"
-require "pry"
+require "debug"
 require "services"
 require "simplecov"
 require "simplecov-lcov"
@@ -52,4 +52,8 @@ RSpec.configure do |config|
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
   config.include FactoryBot::Syntax::Methods
+end
+
+def fixture_record(tag)
+  BibRecord.new(File.read(File.dirname(__FILE__) + "/data/#{tag}.json"))
 end

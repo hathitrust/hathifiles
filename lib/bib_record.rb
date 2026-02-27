@@ -7,6 +7,7 @@ require "fast_jsonparser"
 require "json"
 require "place_of_publication"
 require "us_fed_doc"
+require "record_date"
 require "item_record"
 
 class BibRecord
@@ -81,6 +82,10 @@ class BibRecord
       @imprint = Traject::MarcExtractor.cached("264|*1|bc").extract(marc).map { |imp| imp.strip }
     end
     @imprint
+  end
+
+  def pub_date
+    RecordDate.get_date(marc)
   end
 
   def u_and_f?
