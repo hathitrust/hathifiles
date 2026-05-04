@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "factory_bot"
-require "pathname"
 require "pry"
 require "services"
 require "simplecov"
