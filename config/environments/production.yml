@@ -3,3 +3,4 @@ zephir_dir: <%= ENV['ZEPHIR_DIR'] %>
 hathifiles_dir: <%= ENV['HATHIFILES_DIR'] %>
 history_files_dir: <%= ENV['HISTORY_FILES_DIR'] %>
 redirects_dir: <%= ENV['REDIRECTS_DIR'] %>
+solr_url: <%= ENV['SOLR_URL'] %>

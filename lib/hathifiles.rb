@@ -12,6 +12,8 @@ require_relative "sdr_num_prefixes"
 
 require_relative "services"
 require_relative "settings"
+require_relative "solr_pivot_facets"
+require_relative "title_summary_table"
 require_relative "us_fed_doc"
 require_relative "zephir_file"
 require_relative "zephir_files"

@@ -3,82 +3,54 @@
 # Refresh summary tables for hathifiles for use for analytics, dashboard, etc.
 
 require "dotenv"
-require 'json'
+require "hathifiles_database"
 require "push_metrics"
 
 $LOAD_PATH.unshift "../lib"
 
-require "hathifiles_database"
+require "hathifiles"
 
-class TitleSummaryTable
+# hathifiles_database slice size, seems a little low
+DB_BATCH_SIZE = 100
+SUMMARY_TABLE = TitleSummaryTable.new
+FACETS = SolrPivotFacets.new
 
-  # TODO move in configuration
-  # TODO map from solr names to mariadb table column names
-  FIELD_NAMES = %w(format language country_of_pub_facet publishDate)
-  SOLR_URL = "http://macc-ht-solr-catalog-201.umdl.umich.edu:9033"
+# Do we need this?
+envfile = Pathname.new(__dir__).parent + ".env"
+Dotenv.load(envfile)
 
-  def initialize
-    envfile = Pathname.new(__dir__).parent + ".env"
-    Dotenv.load(envfile)
+tracker = PushMetrics.new(
+  job_name: ENV.fetch("HATHIFILES_DATABASE_JOB_NAME", "title_summary_table_refresh"),
+  logger: Services.logger
+)
 
-    connection = HathifilesDatabase.new
-
-    @db = connection.rawdb
-
-    @tracker = PushMetrics.new(
-      job_name: ENV.fetch("HATHIFILES_DATABASE_JOB_NAME", "title_summary_table_refresh"),
-      logger: connection.logger
-    )
-  end
-
-  def run
-
-    connection.logger.info("Getting summary data from Solr")
-
-    # do with Faraday
-    response = Faraday.get("#{SOLR_URL}/solr/catalog/select?q=*:*&facet.pivot=#{FIELD_NAMES.join(',')}&facet=true&rows=0&facet.pivot.mincount=1&wt=json")
-
-    connection.logger.info("Collecting counts")
-    gather_pivot_counts(solr_pivots)
-
-    swap_tables()
-
-    @tracker.log_final_line
-  end
-
-  # Collect field names, then output counts at the bottom level of the hierarchy
-  def gather_pivot_counts(pivots, fields: {})
-    pivots.each do |pivot|
-      fields = fields.merge(pivot["field"] => pivot["value"])
-
-      if pivot.has_key?("pivot")
-        gather_pivot_counts(pivot, fields)
-      else
-        # TODO increment tracker?
-        # TODO db update here -- @db[:hf_title_summary_expanded_new].import in
-        # batches with Sequel? or should we export and load in bulk with the
-        # mariadb client & LOAD DATA LOCAL INFILE?
-        puts (FIELD_NAMES.map { |f| new_fields[f] } + [data["count"]]).join("\t")
-      end
-    end
-  end
-
-  def swap_tables
-    connection.logger.info("Dropping old title summary table")
-
-    @db.run <<~EOT
-      DROP TABLE IF EXISTS hf_title_summary_expanded_old;
-    EOT
-
-    connection.logger.info("Swapping in new title summary table")
-
-    # Rename will fail if these tables aren't present
-    @db.create_table?("hf_title_summary_expanded") { String :placeholder }
-
-    @db.run <<~EOT
-      RENAME TABLE 
-       hf_summary_expanded TO hf_summary_expanded_old,
-       hf_summary_expanded_refresh TO hf_summary_expanded
-    EOT
-  end
+def insert_rows(rows)
+  SUMMARY_TABLE.dataset(temp: true).multi_insert(rows)
 end
+
+Services.logger.info("Existing summary table count: " + SUMMARY_TABLE.dataset.count.to_s)
+Services.logger.info("Creating temporary database table")
+SUMMARY_TABLE.create(temp: true)
+# truncate in case it was already present
+SUMMARY_TABLE.dataset(temp: true).truncate
+
+# Eager load the pivot data from Solr
+Services.logger.info("Getting summary data from Solr")
+FACETS.pivots
+
+Services.logger.info("Collecting counts")
+rows = []
+FACETS.summarize do |row|
+  rows << row
+  if rows.count >= DB_BATCH_SIZE
+    insert_rows(rows)
+    rows = []
+  end
+  tracker.increment_and_log_batch_line
+end
+# Insert leftovers
+insert_rows(rows)
+
+SUMMARY_TABLE.swap
+tracker.log_final_line
+Services.logger.info("Summary table count now: " + SUMMARY_TABLE.dataset.count.to_s)
