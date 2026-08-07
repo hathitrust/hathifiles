@@ -38,12 +38,6 @@ TEST_NDJ_FILE = "test_dump.ndj.gz"
 TEST_OLDER_SAMPLE_HATHIFILE_NAME = "sample_full_20220101.txt.gz"
 TEST_SAMPLE_HATHIFILE_NAME = "sample_full_20230101.txt.gz"
 
-#FIXME: remove this and rely on redirection to test.log below
-class NullLogger < Logger
-  def add(severity, message = nil, progname = nil)
-  end
-end
-
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
@@ -60,9 +54,9 @@ RSpec.configure do |config|
   # Adapted from holdings-backend. Redirect the log output to a file.
   # This should catch most of the noise.
   config.before(:suite) do
-   FileUtils.rm("test.log") if File.exist?("test.log")
-   Services.register(:logger) do
-     Logger.new("test.log").tap { |l| l.level = Logger::DEBUG }
-   end
+    FileUtils.rm("test.log") if File.exist?("test.log")
+    Services.register(:logger) do
+      Logger.new("test.log").tap { |l| l.level = Logger::DEBUG }
+    end
   end
 end
