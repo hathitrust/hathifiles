@@ -4,7 +4,7 @@ require "hathifiles_database"
 require "open3"
 require "spec_helper"
 
-RSpec.describe "bin/rights_change.sh" do
+RSpec.describe "bin/refresh_title_summary_table" do
   let(:hfdb) { HathifilesDatabase.new.rawdb }
 
   it "populates the database" do
