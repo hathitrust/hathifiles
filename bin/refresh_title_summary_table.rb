@@ -5,9 +5,11 @@
 require "dotenv"
 require "hathifiles_database"
 require "push_metrics"
+require "yaml"
 
 $LOAD_PATH.unshift "../lib"
 
+require "services"
 require "solr_pivot_facets"
 require "title_summary_table"
 
@@ -15,7 +17,7 @@ class RefreshTitleSummaryTable
   # hathifiles_database slice size, seems a little low
   DB_BATCH_SIZE = 100
 
-  attr_reader :facets, :summary_table, :tracker
+  attr_reader :facets, :solr_to_database_fields, :summary_table, :tracker
   def initialize
     # Do we need this?
     envfile = Pathname.new(__dir__).parent + ".env"
@@ -26,6 +28,7 @@ class RefreshTitleSummaryTable
       job_name: ENV.fetch("HATHIFILES_DATABASE_JOB_NAME", "title_summary_table_refresh"),
       logger: Services.logger
     )
+    @solr_to_database_fields = YAML.load_file("data/title_summary_table.yaml")["solr_to_database_fields"]
   end
 
   def insert_rows(rows)
@@ -42,6 +45,10 @@ class RefreshTitleSummaryTable
     Services.logger.info("Getting summary data from Solr and collecting counts")
     rows = []
     facets.summarize do |row|
+      # Map the Solr fields to our database columns
+      row = row.map do |key, value|
+        [solr_to_database_fields.fetch(key, key), value]
+      end.to_h
       rows << row
       if rows.count >= DB_BATCH_SIZE
         insert_rows(rows)
