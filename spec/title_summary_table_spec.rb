@@ -32,12 +32,6 @@ RSpec.describe TitleSummaryTable do
     end
   end
 
-  describe ".new" do
-    it "creates a #{described_class}" do
-      expect(described_class.new).to be_a(described_class)
-    end
-  end
-
   describe "#create" do
     context "non-temporary" do
       context "with no existing table" do

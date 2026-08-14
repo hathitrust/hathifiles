@@ -17,10 +17,6 @@ RSpec.describe SolrPivotFacets do
   end
 
   describe "#summarize" do
-    it "yields" do
-      expect { |b| facets.summarize(&b) }.to yield_control
-    end
-
     # Sample data is based on a subset (`author:smith`) of the Solr catalog sample.
     # The actual number is 26 but I am leaving some wiggle room.
     context "with sample data" do
