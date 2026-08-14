@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "json"
-require "spec_helper"
 require "solr_pivot_facets"
 
 RSpec.describe SolrPivotFacets do

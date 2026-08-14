@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "hathifiles_database"
-require "spec_helper"
 require "title_summary_table"
 
 RSpec.describe TitleSummaryTable do
