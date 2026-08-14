@@ -32,22 +32,11 @@ class SolrPivotFacets
   # suitable for direct insertion in DB.
   #
   # The `data` parameter is for testing.
-  def summarize(data = pivots, &block)
-    gather_pivot_counts(data, &block)
-  end
-
-  private
-
-  def solr_facets_url
-    "#{ENV["SOLR_URL"]}/solr/catalog/select?q=*:*&facet.pivot=#{FIELD_NAMES.join(",")}&facet=true&rows=0&facet.pivot.mincount=1&wt=json"
-  end
-
-  # Collect field names, then output counts at the bottom level of the hierarchy
-  def gather_pivot_counts(pivots, fields: {}, &block)
-    pivots.each do |pivot|
+  def summarize(data = pivots, fields: {}, &block)
+    data.each do |pivot|
       new_fields = fields.merge(pivot["field"] => pivot["value"])
       if pivot.has_key?("pivot")
-        gather_pivot_counts(pivot["pivot"], fields: new_fields, &block)
+        summarize(pivot["pivot"], fields: new_fields, &block)
       elsif block_given?
         row = FIELD_NAMES.map { |f| [SOLR_TO_DB_FIELDS[f], new_fields[f]] }
           .to_h
@@ -55,5 +44,11 @@ class SolrPivotFacets
         block.call(row)
       end
     end
+  end
+
+  private
+
+  def solr_facets_url
+    "#{ENV["SOLR_URL"]}/solr/catalog/select?q=*:*&facet.pivot=#{FIELD_NAMES.join(",")}&facet=true&rows=0&facet.pivot.mincount=1&wt=json"
   end
 end
