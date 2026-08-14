@@ -2,6 +2,7 @@
 
 require "json"
 require "spec_helper"
+require "solr_pivot_facets"
 
 RSpec.describe SolrPivotFacets do
   let(:facets) { described_class.new }

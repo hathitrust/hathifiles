@@ -18,7 +18,8 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
 ])
 SimpleCov.start
 
-require_relative "../lib/hathifiles"
+$LOAD_PATH.unshift "../lib"
+require "hathifiles"
 
 FIXTURES_DIR = Pathname.new(__dir__).realdirpath + "fixtures"
 def fixture(filename)

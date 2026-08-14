@@ -2,6 +2,7 @@
 
 require "hathifiles_database"
 require "spec_helper"
+require "title_summary_table"
 
 RSpec.describe TitleSummaryTable do
   let(:hfdb) { HathifilesDatabase.new.rawdb }

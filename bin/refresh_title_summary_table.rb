@@ -8,7 +8,8 @@ require "push_metrics"
 
 $LOAD_PATH.unshift "../lib"
 
-require "hathifiles"
+require "solr_pivot_facets"
+require "title_summary_table"
 
 class RefreshTitleSummaryTable
   # hathifiles_database slice size, seems a little low
