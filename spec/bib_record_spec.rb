@@ -4,7 +4,6 @@ require "spec_helper"
 require "bib_record"
 
 RSpec.describe BibRecord do
-  # FIXME dry here and elsewhere
   let(:marc) { File.read(File.dirname(__FILE__) + "/data/bib_rec.json") }
   let(:bibrecord) { described_class.new(marc) }
 
