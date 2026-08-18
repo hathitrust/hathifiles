@@ -28,7 +28,7 @@ services:
       MARIADB_HATHIFILES_RW_PASSWORD: ht_rights
       MARIADB_HATHIFILES_RW_HOST: mariadb
       MARIADB_HATHIFILES_RW_DATABASE: ht
-      SOLR_URL: http://solr-sdr-catalog:9033
+      SOLR_URL: http://solr-sdr-catalog:9033/solr/catalog
       PUSHGATEWAY: http://pushgateway:9091
 
   mariadb:

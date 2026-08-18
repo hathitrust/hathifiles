@@ -42,6 +42,6 @@ class SolrPivotFacets
   private
 
   def solr_facets_url
-    "#{ENV["SOLR_URL"]}/solr/catalog/select?q=*:*&facet.pivot=#{FIELD_NAMES.join(",")}&facet=true&rows=0&facet.pivot.mincount=1&wt=json"
+    "#{ENV["SOLR_URL"]}/select?q=*:*&facet.pivot=#{FIELD_NAMES.join(",")}&facet=true&rows=0&facet.pivot.mincount=1&wt=json"
   end
 end
