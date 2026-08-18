@@ -41,5 +41,5 @@ jobs:
             push_latest: ${{ inputs.push_latest}}
             rebuild: ${{ inputs.rebuild }}
             platforms: ${{ inputs.platforms }}
-            submodules: recursive
+            submodules: true
         secrets: inherit
