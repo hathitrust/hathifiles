@@ -35,8 +35,13 @@ class RefreshTitleSummaryTable
     summary_table.dataset(temp: true).multi_insert(rows)
   end
 
+  def count
+    return 0 unless summary_table.db.table_exists?(TitleSummaryTable::TABLE_NAME)
+    summary_table.dataset.count
+  end
+
   def run
-    Services.logger.info("Existing summary table count: " + summary_table.dataset.count.to_s)
+    Services.logger.info("Existing summary table count: #{count}")
     Services.logger.info("Creating temporary database table")
     summary_table.create(temp: true)
     # truncate in case it was already present
