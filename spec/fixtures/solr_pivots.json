@@ -1,0 +1,90 @@
+[{"field": "format",
+  "value": "Book",
+  "count": 18,
+  "pivot":
+   [{"field": "language",
+     "value": "English",
+     "count": 18,
+     "pivot":
+      [{"field": "country_of_pub_facet",
+        "value": "United States",
+        "count": 12,
+        "pivot":
+         [{"field": "publishDate", "value": "1865", "count": 1},
+          {"field": "publishDate", "value": "1867", "count": 1},
+          {"field": "publishDate", "value": "1906", "count": 1},
+          {"field": "publishDate", "value": "1909", "count": 1},
+          {"field": "publishDate", "value": "1914", "count": 1},
+          {"field": "publishDate", "value": "1916", "count": 1},
+          {"field": "publishDate", "value": "1919", "count": 1},
+          {"field": "publishDate", "value": "1920", "count": 1},
+          {"field": "publishDate", "value": "1921", "count": 1},
+          {"field": "publishDate", "value": "1925", "count": 1},
+          {"field": "publishDate", "value": "1935", "count": 1},
+          {"field": "publishDate", "value": "1954", "count": 1}]},
+       {"field": "country_of_pub_facet",
+        "value": "England",
+        "count": 3,
+        "pivot":
+         [{"field": "publishDate", "value": "1853", "count": 1},
+          {"field": "publishDate", "value": "1922", "count": 1},
+          {"field": "publishDate", "value": "1988", "count": 1}]},
+       {"field": "country_of_pub_facet",
+        "value": "United Kingdom",
+        "count": 3,
+        "pivot":
+         [{"field": "publishDate", "value": "1853", "count": 1},
+          {"field": "publishDate", "value": "1922", "count": 1},
+          {"field": "publishDate", "value": "1988", "count": 1}]},
+       {"field": "country_of_pub_facet",
+        "value": "No place, unknown, or undetermined",
+        "count": 2,
+        "pivot":
+         [{"field": "publishDate", "value": "1855", "count": 1},
+          {"field": "publishDate", "value": "1908", "count": 1}]},
+       {"field": "country_of_pub_facet",
+        "value": "Canada",
+        "count": 1,
+        "pivot":
+         [{"field": "publishDate", "value": "1881", "count": 1}]},
+       {"field": "country_of_pub_facet",
+        "value": "United States Utah",
+        "count": 1,
+        "pivot":
+         [{"field": "publishDate", "value": "1909", "count": 1}]}]}]},
+ {"field": "format",
+  "value": "Biography",
+  "count": 1,
+  "pivot":
+   [{"field": "language",
+     "value": "English",
+     "count": 1,
+     "pivot":
+      [{"field": "country_of_pub_facet",
+        "value": "England",
+        "count": 1,
+        "pivot":
+         [{"field": "publishDate", "value": "1922", "count": 1}]},
+       {"field": "country_of_pub_facet",
+        "value": "United Kingdom",
+        "count": 1,
+        "pivot":
+         [{"field": "publishDate", "value": "1922", "count": 1}]}]}]},
+ {"field": "format",
+  "value": "Photographs & Pictorial Works",
+  "count": 1,
+  "pivot":
+   [{"field": "language",
+     "value": "English",
+     "count": 1,
+     "pivot":
+      [{"field": "country_of_pub_facet",
+        "value": "England",
+        "count": 1,
+        "pivot":
+         [{"field": "publishDate", "value": "1988", "count": 1}]},
+       {"field": "country_of_pub_facet",
+        "value": "United Kingdom",
+        "count": 1,
+        "pivot":
+         [{"field": "publishDate", "value": "1988", "count": 1}]}]}]}]

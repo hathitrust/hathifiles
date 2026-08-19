@@ -19,7 +19,7 @@ module HathifileHistory
     attr_accessor :logger, :newest_load
     attr_reader :records
 
-    def initialize(logger: Logger.new($stdout))
+    def initialize(logger: Services.logger)
       @current_record_for = {}
       @records = {}
       @newest_load = 0
@@ -109,7 +109,7 @@ module HathifileHistory
     # @param [String] filename from a previous call to #dump_to_ndj
     # @param [#info] logger A logger
     # @return [Records] a full Records object with all that data
-    def self.load_from_ndj(file_from_dump_to_ndj, logger: Logger.new($stdout))
+    def self.load_from_ndj(file_from_dump_to_ndj, logger: Services.logger)
       recs = new
       basename = Pathname.new(file_from_dump_to_ndj).basename
       mm = Milemarker.new(batch_size: 500_000, name: "load #{basename}", logger: logger)
@@ -188,11 +188,11 @@ module HathifileHistory
 
     # @param [String] Filename of the form hathi_*_20111101*
     # @return [Integer] A six digit string of the form YYYYMM representing the year/month
-    def self.yyyymm_from_filename(filename, logger: Logger.new($stdout))
+    def self.yyyymm_from_filename(filename)
       fulldate = filename.gsub(/\D/, "")
       yyyymm = Integer(fulldate[0..-3], exception: false)
       if yyyymm.nil?
-        logger.error "Can't get yyyymm from filename '#{filename}'. Aborting"
+        Services.logger.error "Can't get yyyymm from filename '#{filename}'. Aborting"
         exit 1
       end
       yyyymm

@@ -18,9 +18,13 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
 ])
 SimpleCov.start
 
-require_relative "../lib/hathifiles"
+$LOAD_PATH.unshift "../lib"
+require "hathifiles"
 
 FIXTURES_DIR = Pathname.new(__dir__).realdirpath + "fixtures"
+def fixture(filename)
+  File.join(FIXTURES_DIR, filename)
+end
 
 TEST_RECID = "000"
 TEST_RECID_1 = "001"
@@ -35,11 +39,6 @@ TEST_NDJ_FILE = "test_dump.ndj.gz"
 TEST_OLDER_SAMPLE_HATHIFILE_NAME = "sample_full_20220101.txt.gz"
 TEST_SAMPLE_HATHIFILE_NAME = "sample_full_20230101.txt.gz"
 
-class NullLogger < Logger
-  def add(severity, message = nil, progname = nil)
-  end
-end
-
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
@@ -52,4 +51,13 @@ RSpec.configure do |config|
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
   config.include FactoryBot::Syntax::Methods
+
+  # Adapted from holdings-backend. Redirect the log output to a file.
+  # This should catch most of the noise.
+  config.before(:suite) do
+    FileUtils.rm("test.log") if File.exist?("test.log")
+    Services.register(:logger) do
+      Logger.new("test.log").tap { |l| l.level = Logger::DEBUG }
+    end
+  end
 end

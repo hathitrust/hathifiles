@@ -8,7 +8,7 @@ UNPARSEABLE_LINE = ""
 
 RSpec.describe HathifileHistory::Records do
   let(:records) do
-    described_class.new(logger: NullLogger.new($stdout))
+    described_class.new(logger: Services.logger)
   end
 
   describe "#initialize" do
@@ -136,8 +136,7 @@ RSpec.describe HathifileHistory::Records do
   describe ".load_from_ndj" do
     it "does not raise" do
       fixture = File.join(FIXTURES_DIR, TEST_NDJ_FILE)
-      logger = NullLogger.new($stdout)
-      expect { described_class.load_from_ndj(fixture, logger: logger) }.not_to raise_error
+      expect { described_class.load_from_ndj(fixture) }.not_to raise_error
     end
   end
 

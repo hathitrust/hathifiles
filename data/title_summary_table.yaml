@@ -1,0 +1,7 @@
+---
+solr_to_database_fields:
+  format: format
+  language: language
+  country_of_pub_facet: publication_place
+  publishDate: published_year
+  gov_doc: us_gov_doc_flag

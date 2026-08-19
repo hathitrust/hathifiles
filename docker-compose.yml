@@ -8,7 +8,6 @@ x-healthcheck-defaults: &healthcheck-defaults
   retries: 5
 
 services:
-
   hf:
     build:
       context: .
@@ -19,11 +18,17 @@ services:
     depends_on:
       mariadb: *healthy
       pushgateway: *healthy
+      solr-sdr-catalog: *healthy
     environment:
       MARIADB_HT_RO_USERNAME: ht_rights
       MARIADB_HT_RO_PASSWORD: ht_rights
       MARIADB_HT_RO_HOST: mariadb
       MARIADB_HT_RO_DATABASE: ht
+      MARIADB_HATHIFILES_RW_USERNAME: ht_rights
+      MARIADB_HATHIFILES_RW_PASSWORD: ht_rights
+      MARIADB_HATHIFILES_RW_HOST: mariadb
+      MARIADB_HATHIFILES_RW_DATABASE: ht
+      SOLR_URL: http://solr-sdr-catalog:9033/solr/catalog
       PUSHGATEWAY: http://pushgateway:9091
 
   mariadb:
@@ -37,6 +42,14 @@ services:
     healthcheck:
       <<: *healthcheck-defaults
       test: [ "CMD", "healthcheck.sh", "--su-mysql", "--connect", "--innodb_initialized" ]
+
+  solr-sdr-catalog:
+    image: ghcr.io/hathitrust/catalog-solr-sample-standalone:solr-standalone
+    ports:
+    - "9033:9033"
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: "curl -f --retry-connrefused http://localhost:9033"
 
   pushgateway:
     image: prom/pushgateway
