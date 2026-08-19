@@ -13,7 +13,7 @@ class SolrPivotFacets
   def pivots
     return @pivots if @pivots
 
-    data = JSON.parse(Faraday.get(solr_facets_url).body)
+    data = JSON.parse(solr_connection.get.body)
     @pivots = data["facet_counts"]["facet_pivot"][FIELD_NAMES.join(",")]
   end
 
@@ -43,5 +43,11 @@ class SolrPivotFacets
 
   def solr_facets_url
     "#{ENV["SOLR_URL"]}/select?q=*:*&facet.pivot=#{FIELD_NAMES.join(",")}&facet=true&rows=0&facet.pivot.mincount=1&wt=json"
+  end
+
+  def solr_connection
+    Faraday.new(solr_facets_url) do |f|
+      f.headers["Accept"] = "application/json"
+    end
   end
 end
