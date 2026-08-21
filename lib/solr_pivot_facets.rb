@@ -46,7 +46,7 @@ class SolrPivotFacets
   end
 
   def solr_connection
-    Faraday.new(solr_facets_url) do |f|
+    Faraday.new(solr_facets_url, request: {timeout: 120}) do |f|
       f.headers["Accept"] = "application/json"
     end
   end
