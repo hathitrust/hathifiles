@@ -36,7 +36,7 @@ class TitleSummaryTable
         publication_place VARCHAR(128),
         us_gov_doc_flag tinyint(4),
         total_unique_titles bigint(21)
-      );
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
     SQL
   end
 
