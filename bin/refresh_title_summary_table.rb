@@ -17,18 +17,20 @@ class RefreshTitleSummaryTable
   # hathifiles_database slice size, seems a little low
   DB_BATCH_SIZE = 100
 
-  attr_reader :facets, :solr_to_database_fields, :summary_table, :tracker
+  attr_reader :solr_to_database_fields, :summary_table, :tracker, :formats
   def initialize
     # Do we need this?
     envfile = Pathname.new(__dir__).parent + ".env"
     Dotenv.load(envfile)
     @summary_table = TitleSummaryTable.new(logger: Services.logger)
-    @facets = SolrPivotFacets.new
     @tracker = PushMetrics.new(
       job_name: ENV.fetch("HATHIFILES_DATABASE_JOB_NAME", "title_summary_table_refresh"),
       logger: Services.logger
     )
-    @solr_to_database_fields = YAML.load_file("data/title_summary_table.yaml")["solr_to_database_fields"]
+
+    config = YAML.load_file("data/title_summary_table.yaml")
+    @solr_to_database_fields = config["solr_to_database_fields"]
+    @formats = config["formats"]
   end
 
   def insert_rows(rows)
@@ -40,20 +42,15 @@ class RefreshTitleSummaryTable
     summary_table.dataset.count
   end
 
-  def run
-    Services.logger.info("Existing summary table count: #{count}")
-    Services.logger.info("Creating temporary database table")
-    summary_table.create(temp: true)
-    # truncate in case it was already present
-    summary_table.dataset(temp: true).truncate
-
-    Services.logger.info("Getting summary data from Solr and collecting counts")
+  def summarize_format(format)
+    Services.logger.info("Getting summary data from Solr and collecting counts for format #{format}")
     rows = []
-    facets.summarize do |row|
+    SolrPivotFacets.new(filter_query: "format:\"#{format}\"").summarize do |row|
       # Map the Solr fields to our database columns
       row = row.map do |key, value|
         [solr_to_database_fields.fetch(key, key), value]
       end.to_h
+      row[solr_to_database_fields.fetch('format','format')] = format
       rows << row
       if rows.count >= DB_BATCH_SIZE
         insert_rows(rows)
@@ -63,6 +60,16 @@ class RefreshTitleSummaryTable
     end
     # Insert leftovers
     insert_rows(rows)
+  end
+
+  def run
+    Services.logger.info("Existing summary table count: #{count}")
+    Services.logger.info("Creating temporary database table")
+    summary_table.create(temp: true)
+    # truncate in case it was already present
+    summary_table.dataset(temp: true).truncate
+
+    formats.each { |format| summarize_format(format) }
 
     summary_table.swap
     tracker.log_final_line

@@ -19,8 +19,8 @@ RSpec.describe "bin/refresh_title_summary_table" do
     table.dataset.truncate
     # Now do it.
     RefreshTitleSummaryTable.new.run
-    # Expect about 1800 entries from solr-sdr-sample, subject to change
-    expect(table.dataset.count).to be_between(1500, 3000)
+    # Expect about 1300 entries from solr-sdr-sample, subject to change
+    expect(table.dataset.count).to be_between(1000, 2000)
   end
 
   it "creates the table(s) if necessary" do
@@ -29,6 +29,28 @@ RSpec.describe "bin/refresh_title_summary_table" do
     hfdb.drop_table?(temp_table_name)
     hfdb.drop_table?(old_table_name)
     RefreshTitleSummaryTable.new.run
-    expect(TitleSummaryTable.new.dataset.count).to be_between(1500, 3000)
+    expect(TitleSummaryTable.new.dataset.count).to be_between(1000, 2000)
+  end
+
+  it "has rows for items missing language, pub year, or pub place" do
+    RefreshTitleSummaryTable.new.run
+
+    dataset = TitleSummaryTable.new.dataset
+
+    expect(dataset.where(language: nil).count).to be > 0
+    expect(dataset.where(published_year: nil).count).to be > 0
+    expect(dataset.where(publication_place: nil).count).to be > 0
+  end
+
+  it "has the expected number of formats" do
+    RefreshTitleSummaryTable.new.run
+
+    # should match formats from title_summary_table.yaml; sample data won't
+    # have all of them, but should have more than one, and not have a bunch of
+    # extraneous formats
+    dataset = TitleSummaryTable.new.dataset
+
+    expect(dataset.distinct(:format).to_a.map(&:values).flatten).to include("Book", "Serial")
+    expect(dataset.distinct(:format).count).to be < 8
   end
 end

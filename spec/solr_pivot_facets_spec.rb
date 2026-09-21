@@ -29,14 +29,14 @@ RSpec.describe SolrPivotFacets do
     end
 
     # See above, but the Solr catalog sample may undergo multiple iterations.
-    # The actual number is 1849 but I am leaving a fair amount of wiggle room.
+    # The actual number is 1319 but I am leaving a fair amount of wiggle room.
     context "with Solr data" do
       it "yields WAY more than 20 rows" do
         rows = Set.new
         facets.summarize do |row|
           rows << row
         end
-        expect(rows.count).to be_between(1500, 3000)
+        expect(rows.count).to be_between(1000, 2000)
       end
     end
   end
