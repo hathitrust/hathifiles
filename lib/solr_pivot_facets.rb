@@ -6,7 +6,7 @@ require "faraday"
 require "json"
 
 class SolrPivotFacets
-  FIELD_NAMES = %w[language country_of_pub_facet publishDate]
+  FIELD_NAMES = %w[language008_full country_of_pub_facet publishDate]
 
   def initialize(filter_query: "*:*")
     @filter_query = filter_query

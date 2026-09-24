@@ -10,7 +10,7 @@ formats:
   - Visual Material
 solr_to_database_fields:
   format: format
-  language: language
+  language008_full: language
   country_of_pub_facet: publication_place
   publishDate: published_year
   gov_doc: us_gov_doc_flag
