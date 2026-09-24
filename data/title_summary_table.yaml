@@ -1,4 +1,13 @@
 ---
+formats:
+  - Book
+  - Data File
+  - Map
+  - Mixed Material
+  - Music
+  - Serial
+  - Unknown
+  - Visual Material
 solr_to_database_fields:
   format: format
   language: language

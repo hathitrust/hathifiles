@@ -6,7 +6,11 @@ require "faraday"
 require "json"
 
 class SolrPivotFacets
-  FIELD_NAMES = %w[format language country_of_pub_facet publishDate]
+  FIELD_NAMES = %w[language country_of_pub_facet publishDate]
+
+  def initialize(filter_query: "*:*")
+    @filter_query = filter_query
+  end
 
   # Retrieve pivots from Solr and parse.
   # Can be called before `run` if desired for more granular logging.
@@ -42,7 +46,11 @@ class SolrPivotFacets
   private
 
   def solr_facets_url
-    "#{ENV["SOLR_URL"]}/select?q=*:*&facet.pivot=#{FIELD_NAMES.join(",")}&facet=true&rows=0&facet.pivot.mincount=1&wt=json"
+    # facet.limit = -1 - return all facets (do not limit # of returned facets)
+    # facet.pivot.mincount = 1 - return facets with at least one matching item
+    # facet.missing = true - include items where a facet value isn't set (i.e.
+    #                 include 'null' as a possible facet value)
+    "#{ENV["SOLR_URL"]}/select?q=*:*&fq=#{@filter_query}&facet.pivot=#{FIELD_NAMES.join(",")}&facet=true&rows=0&facet.pivot.mincount=1&facet.missing=true&facet.limit=-1&wt=json"
   end
 
   def solr_connection
