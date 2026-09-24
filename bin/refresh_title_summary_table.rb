@@ -81,9 +81,7 @@ if $PROGRAM_NAME == __FILE__
   # Not covered because Simplecov doesn't instrument anything called w/ backticks or `open3`
   # and the integration test invokes this by class anyway.
   # Doing otherwise might involve brittle `$PROGRAM_NAME` shenanigans.
-  # Note: when moving from SimpleCov 0.22.0 to 1.X replace the :nocov: directives with
-  # simplecov:disable and simplecov:enable to avoid deprecation notices.
-  # :nocov:
+  # simplecov:disable
   RefreshTitleSummaryTable.new.run
-  # :nocov:
+  # simplecov:enable
 end
