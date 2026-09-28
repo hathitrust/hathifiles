@@ -7,10 +7,10 @@ GIT
 
 GIT
   remote: https://github.com/hathitrust/hathifiles_database.git
-  revision: 6c455cee4fef27ef2692e1f3c01a1e15354797a9
+  revision: ac1a4998c14f2037e7afc4bb34361284d44810bc
   branch: main
   specs:
-    hathifiles_database (0.5.9)
+    hathifiles_database (0.5.10)
       date_named_file
       dotenv
       ettin
