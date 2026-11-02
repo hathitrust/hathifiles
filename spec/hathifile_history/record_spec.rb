@@ -106,17 +106,19 @@ RSpec.describe HathifileHistory::Record do
     it "produces a JSON string" do
       json = record.to_json
       expect(json).to be_a String
-      expect(json).to match(/json_class/)
+      expect { JSON.parse(json) }.not_to raise_exception
     end
   end
 
-  describe ".json_create" do
+  describe ".from_json" do
     it "produces an identical copy" do
       rec = record
+      # make sure we have an entry
+      rec.see(TEST_HTID, TEST_YYYYMM)
+
       json = rec.to_json
-      new_rec = JSON.parse(json, create_additions: true)
+      new_rec = described_class.from_json(json)
       expect(new_rec).to be_a described_class
-      # expect(json).to be_a String
       expect(new_rec.entries).to eq rec.entries
     end
   end

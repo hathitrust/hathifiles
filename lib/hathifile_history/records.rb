@@ -116,7 +116,7 @@ module HathifileHistory
       logger.info "Loading #{file_from_dump_to_ndj}"
 
       Zinzout.zin(file_from_dump_to_ndj).each do |line|
-        record = JSON.parse(line, create_additions: true)
+        record = Record.from_json(line)
         recs.add_record(record)
         mm.increment_and_log_batch_line
       end

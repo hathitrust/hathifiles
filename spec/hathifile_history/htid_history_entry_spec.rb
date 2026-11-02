@@ -27,15 +27,15 @@ RSpec.describe HathifileHistory::HTIDHistoryEntry do
     it "produces a JSON string" do
       json = entry.to_json
       expect(json).to be_a String
-      expect(json).to match(/json_class/)
+      expect { JSON.parse(json) }.not_to raise_exception
     end
   end
 
-  describe ".json_create" do
-    it "produces an identical copy" do
+  describe ".from_hash" do
+    it "can round-trip via JSON" do
       old_entry = entry
       json = old_entry.to_json
-      new_entry = JSON.parse(json, create_additions: true)
+      new_entry = described_class.from_hash(JSON.parse(json))
       expect(new_entry).to be_a described_class
       expect(new_entry.appeared_on).to eq old_entry.appeared_on
       expect(new_entry.last_seen_here).to eq old_entry.last_seen_here
