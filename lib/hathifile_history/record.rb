@@ -15,7 +15,6 @@ module HathifileHistory
       @current_entries = Set.new
       @current_htids = Set.new
 
-      @json_create_id = JSON.create_id.freeze
       @classname = self.class.name.freeze
     end
 
@@ -61,18 +60,18 @@ module HathifileHistory
 
     def to_json(*)
       {
-        :recid => @recid,
-        :mrs => @most_recently_seen,
-        :entries => entries,
-        @json_create_id => @classname
+        recid: @recid,
+        mrs: @most_recently_seen,
+        entries: entries
       }.to_json(*)
     end
 
     # @param [Hash] Result of json-parsing data from the ndj
-    def self.json_create(rec)
+    def self.from_json(json)
+      rec = JSON.parse(json)
       r = new(rec["recid"])
       r.most_recently_seen = rec["mrs"]
-      r.entries = rec["entries"]
+      r.entries = rec["entries"].transform_values { |e| HTIDHistoryEntry.from_hash(e) }
       r
     end
   end

@@ -11,7 +11,6 @@ module HathifileHistory
       @appeared_on = appeared_on
       @last_seen_here = last_seen_here
 
-      @json_create_id = JSON.create_id.freeze
       @classname = self.class.name.freeze
     end
 
@@ -20,12 +19,18 @@ module HathifileHistory
     end
 
     def to_json(*)
-      {:htid => @htid, :app => @appeared_on, :lsh => @last_seen_here, @json_create_id => @classname}.to_json(*)
+      {htid: @htid, app: @appeared_on, lsh: @last_seen_here}.to_json(*)
     end
 
     # @param [Hash] hist result of json-parsing the ndj hathifile_line
-    def self.json_create(hist)
+    def self.from_hash(hist)
       new(htid: hist["htid"], appeared_on: hist["app"], last_seen_here: hist["lsh"])
+    end
+
+    def ==(other)
+      htid == other.htid &&
+        appeared_on == other.appeared_on &&
+        last_seen_here == other.last_seen_here
     end
   end
 end
